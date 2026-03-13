@@ -2,6 +2,8 @@
 
 Technical documentation for the [OCFCrews](https://github.com/proutyio/ocfcrews) crew scheduling platform, built with [Docusaurus](https://docusaurus.io/).
 
+**Live docs:** [https://proutyio.github.io/ocfcrews-docs/](https://proutyio.github.io/ocfcrews-docs/)
+
 ## Setup
 
 ```bash
