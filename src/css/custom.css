@@ -1,0 +1,112 @@
+/**
+ * OCFCrews Documentation - Custom Theme
+ * Emerald brand color palette
+ */
+
+:root {
+  --ifm-color-primary: #059669;
+  --ifm-color-primary-dark: #047857;
+  --ifm-color-primary-darker: #065f46;
+  --ifm-color-primary-darkest: #064e3b;
+  --ifm-color-primary-light: #10b981;
+  --ifm-color-primary-lighter: #34d399;
+  --ifm-color-primary-lightest: #6ee7b7;
+  --ifm-code-font-size: 95%;
+  --ifm-heading-font-weight: 700;
+  --ifm-font-family-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ifm-font-family-monospace: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --docusaurus-highlighted-code-line-bg: rgba(5, 150, 105, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #10b981;
+  --ifm-color-primary-dark: #059669;
+  --ifm-color-primary-darker: #047857;
+  --ifm-color-primary-darkest: #065f46;
+  --ifm-color-primary-light: #34d399;
+  --ifm-color-primary-lighter: #6ee7b7;
+  --ifm-color-primary-lightest: #a7f3d0;
+  --docusaurus-highlighted-code-line-bg: rgba(16, 185, 129, 0.15);
+}
+
+/* Navbar styling */
+.navbar {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='dark'] .navbar {
+  background-color: #1a1a2e;
+}
+
+/* Sidebar active link */
+.menu__link--active:not(.menu__link--sublist) {
+  border-left: 3px solid var(--ifm-color-primary);
+  padding-left: calc(var(--ifm-menu-link-padding-horizontal) - 3px);
+}
+
+/* Hero section */
+.hero--primary {
+  background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #047857 100%);
+}
+
+[data-theme='dark'] .hero--primary {
+  background: linear-gradient(135deg, #022c22 0%, #065f46 50%, #064e3b 100%);
+}
+
+/* Table styling */
+table {
+  display: table;
+  width: 100%;
+}
+
+table th {
+  background-color: rgba(5, 150, 105, 0.08);
+}
+
+[data-theme='dark'] table th {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+/* Admonition (callout) customization */
+.alert--info {
+  --ifm-alert-background-color: rgba(5, 150, 105, 0.08);
+  --ifm-alert-border-color: var(--ifm-color-primary);
+}
+
+/* Code block titles */
+.theme-code-block-highlighted-line {
+  background-color: var(--docusaurus-highlighted-code-line-bg);
+}
+
+/* Mermaid diagram styling */
+.docusaurus-mermaid-container {
+  margin: 1.5rem 0;
+}
+
+/* Footer */
+.footer--dark {
+  background-color: #064e3b;
+}
+
+[data-theme='dark'] .footer--dark {
+  background-color: #0a0a1a;
+}
+
+/* Badge/tag styling */
+.badge--primary {
+  background-color: var(--ifm-color-primary);
+}
+
+/* Scrollbar styling for code blocks */
+pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background-color: rgba(5, 150, 105, 0.3);
+  border-radius: 3px;
+}

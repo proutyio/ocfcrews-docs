@@ -1,0 +1,39 @@
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quickLinks {
+  padding: 3rem 0;
+  background-color: var(--ifm-background-surface-color);
+}
+
+.quickLink {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  font-weight: 500;
+  transition: border-color 0.2s ease;
+  text-decoration: none;
+}
+
+.quickLink:hover {
+  border-color: var(--ifm-color-primary);
+  text-decoration: none;
+}

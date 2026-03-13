@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="adminGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#064e3b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="editorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10b981;stop-opacity:1" />
+    </linearGradient>
+    <filter id="sh">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="850" height="520" fill="#f8fafc" rx="8"/>
+
+  <!-- Title -->
+  <text x="425" y="35" text-anchor="middle" font-size="20" font-weight="700" fill="#064e3b">OCFCrews Role Hierarchy</text>
+
+  <!-- Admin (top) -->
+  <g filter="url(#sh)">
+    <rect x="325" y="55" width="200" height="50" rx="8" fill="url(#adminGrad)"/>
+    <text x="425" y="78" text-anchor="middle" font-size="14" font-weight="700" fill="white">admin</text>
+    <text x="425" y="95" text-anchor="middle" font-size="10" fill="#d1fae5">Full system access</text>
+  </g>
+
+  <!-- Lines from admin -->
+  <line x1="350" y1="105" x2="200" y2="145" stroke="#059669" stroke-width="1.5"/>
+  <line x1="425" y1="105" x2="425" y2="145" stroke="#059669" stroke-width="1.5"/>
+  <line x1="500" y1="105" x2="650" y2="145" stroke="#059669" stroke-width="1.5"/>
+
+  <!-- Editor -->
+  <g filter="url(#sh)">
+    <rect x="325" y="145" width="200" height="50" rx="8" fill="url(#editorGrad)"/>
+    <text x="425" y="168" text-anchor="middle" font-size="14" font-weight="600" fill="white">editor</text>
+    <text x="425" y="185" text-anchor="middle" font-size="10" fill="#d1fae5">Admin panel read/write</text>
+  </g>
+
+  <!-- CREW ROLES BRANCH (left) -->
+  <rect x="40" y="140" width="280" height="370" rx="10" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="180" y="160" text-anchor="middle" font-size="12" font-weight="600" fill="#059669">Crew Roles</text>
+
+  <!-- Coordinator -->
+  <g filter="url(#sh)">
+    <rect x="80" y="175" width="200" height="45" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+    <text x="180" y="196" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">crew_coordinator</text>
+    <text x="180" y="212" text-anchor="middle" font-size="9" fill="#6b7280">Manage crew + schedules</text>
+  </g>
+
+  <!-- Line: editor -> coordinator -->
+  <line x1="325" y1="175" x2="280" y2="195" stroke="#059669" stroke-width="1"/>
+
+  <!-- Elder -->
+  <g filter="url(#sh)">
+    <rect x="80" y="235" width="200" height="45" rx="6" fill="#ecfdf5" stroke="#34d399" stroke-width="1.5"/>
+    <text x="180" y="256" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">crew_elder</text>
+    <text x="180" y="272" text-anchor="middle" font-size="9" fill="#6b7280">Senior crew member</text>
+  </g>
+  <line x1="180" y1="220" x2="180" y2="235" stroke="#059669" stroke-width="1"/>
+
+  <!-- Leader -->
+  <g filter="url(#sh)">
+    <rect x="80" y="295" width="200" height="45" rx="6" fill="#ecfdf5" stroke="#34d399" stroke-width="1.5"/>
+    <text x="180" y="316" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">crew_leader</text>
+    <text x="180" y="332" text-anchor="middle" font-size="9" fill="#6b7280">Lead shifts, remove members</text>
+  </g>
+  <line x1="180" y1="280" x2="180" y2="295" stroke="#059669" stroke-width="1"/>
+
+  <!-- Member -->
+  <g filter="url(#sh)">
+    <rect x="80" y="355" width="200" height="45" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.5"/>
+    <text x="180" y="376" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">crew_member</text>
+    <text x="180" y="392" text-anchor="middle" font-size="9" fill="#6b7280">Sign up for shifts</text>
+  </g>
+  <line x1="180" y1="340" x2="180" y2="355" stroke="#059669" stroke-width="1"/>
+
+  <!-- Other -->
+  <g filter="url(#sh)">
+    <rect x="80" y="415" width="200" height="45" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+    <text x="180" y="436" text-anchor="middle" font-size="13" font-weight="600" fill="#475569">other</text>
+    <text x="180" y="452" text-anchor="middle" font-size="9" fill="#6b7280">Minimal access</text>
+  </g>
+  <line x1="180" y1="400" x2="180" y2="415" stroke="#94a3b8" stroke-width="1"/>
+
+  <!-- INVENTORY ROLES BRANCH (right) -->
+  <rect x="530" y="140" width="280" height="310" rx="10" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="670" y="160" text-anchor="middle" font-size="12" font-weight="600" fill="#059669">Inventory Roles</text>
+
+  <!-- Inventory Admin -->
+  <g filter="url(#sh)">
+    <rect x="570" y="175" width="200" height="45" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+    <text x="670" y="196" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">inventory_admin</text>
+    <text x="670" y="212" text-anchor="middle" font-size="9" fill="#6b7280">Full inventory + recipes CRUD</text>
+  </g>
+  <line x1="525" y1="175" x2="570" y2="195" stroke="#059669" stroke-width="1"/>
+
+  <!-- Inventory Editor -->
+  <g filter="url(#sh)">
+    <rect x="570" y="240" width="200" height="45" rx="6" fill="#ecfdf5" stroke="#34d399" stroke-width="1.5"/>
+    <text x="670" y="261" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">inventory_editor</text>
+    <text x="670" y="277" text-anchor="middle" font-size="9" fill="#6b7280">Edit items + recipes, log transactions</text>
+  </g>
+  <line x1="670" y1="220" x2="670" y2="240" stroke="#059669" stroke-width="1"/>
+
+  <!-- Inventory Viewer -->
+  <g filter="url(#sh)">
+    <rect x="570" y="305" width="200" height="45" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.5"/>
+    <text x="670" y="326" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">inventory_viewer</text>
+    <text x="670" y="342" text-anchor="middle" font-size="9" fill="#6b7280">Read-only inventory access</text>
+  </g>
+  <line x1="670" y1="285" x2="670" y2="305" stroke="#059669" stroke-width="1"/>
+
+  <!-- Viewer (standalone) -->
+  <g filter="url(#sh)">
+    <rect x="570" y="375" width="200" height="45" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+    <text x="670" y="396" text-anchor="middle" font-size="13" font-weight="600" fill="#475569">viewer</text>
+    <text x="670" y="412" text-anchor="middle" font-size="9" fill="#6b7280">Admin panel read-only</text>
+  </g>
+
+  <!-- Legend -->
+  <rect x="40" y="478" width="770" height="30" rx="4" fill="#f1f5f9"/>
+  <circle cx="70" cy="493" r="6" fill="#064e3b"/>
+  <text x="82" y="497" font-size="10" fill="#6b7280">Full access</text>
+  <circle cx="180" cy="493" r="6" fill="#059669"/>
+  <text x="192" y="497" font-size="10" fill="#6b7280">Management</text>
+  <circle cx="290" cy="493" r="6" fill="#34d399"/>
+  <text x="302" y="497" font-size="10" fill="#6b7280">Edit access</text>
+  <circle cx="395" cy="493" r="6" fill="#6ee7b7"/>
+  <text x="407" y="497" font-size="10" fill="#6b7280">Basic access</text>
+  <circle cx="505" cy="493" r="6" fill="#94a3b8"/>
+  <text x="517" y="497" font-size="10" fill="#6b7280">Minimal</text>
+  <text x="620" y="497" font-size="10" fill="#6b7280">| Users can hold multiple roles simultaneously</text>
+</svg>

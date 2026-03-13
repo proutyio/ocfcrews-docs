@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#064e3b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lightGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ecfdf5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d1fae5;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="600" fill="#f8fafc" rx="8"/>
+
+  <!-- Title -->
+  <text x="450" y="40" text-anchor="middle" font-size="20" font-weight="700" fill="#064e3b">OCFCrews System Architecture</text>
+
+  <!-- Browser/Client -->
+  <g filter="url(#shadow)">
+    <rect x="340" y="65" width="220" height="60" rx="8" fill="url(#emeraldGrad)"/>
+    <text x="450" y="92" text-anchor="middle" font-size="14" font-weight="600" fill="white">Browser / Client</text>
+    <text x="450" y="112" text-anchor="middle" font-size="11" fill="#d1fae5">React 19 + Next.js Hydration</text>
+  </g>
+
+  <!-- Arrow: Client -> Next.js -->
+  <line x1="450" y1="125" x2="450" y2="160" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <!-- Vercel Box -->
+  <rect x="120" y="160" width="660" height="250" rx="12" fill="none" stroke="#059669" stroke-width="2" stroke-dasharray="8,4"/>
+  <text x="140" y="182" font-size="11" fill="#059669" font-weight="600">Vercel (Node.js Runtime)</text>
+
+  <!-- Next.js App -->
+  <g filter="url(#shadow)">
+    <rect x="280" y="195" width="340" height="70" rx="8" fill="url(#lightGrad)" stroke="#059669" stroke-width="1.5"/>
+    <text x="450" y="222" text-anchor="middle" font-size="14" font-weight="600" fill="#064e3b">Next.js 15 App Router</text>
+    <text x="450" y="242" text-anchor="middle" font-size="11" fill="#047857">Server Components + API Routes</text>
+    <text x="450" y="256" text-anchor="middle" font-size="10" fill="#6b7280">Middleware: Route Protection</text>
+  </g>
+
+  <!-- Arrow: Next.js -> Payload -->
+  <line x1="450" y1="265" x2="450" y2="300" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="470" y="287" font-size="9" fill="#6b7280">in-process</text>
+
+  <!-- Payload CMS -->
+  <g filter="url(#shadow)">
+    <rect x="280" y="300" width="340" height="70" rx="8" fill="url(#emeraldGrad)"/>
+    <text x="450" y="327" text-anchor="middle" font-size="14" font-weight="600" fill="white">Payload CMS 3.76.1</text>
+    <text x="450" y="347" text-anchor="middle" font-size="11" fill="#d1fae5">Collections + Access Control + Hooks</text>
+    <text x="450" y="361" text-anchor="middle" font-size="10" fill="#a7f3d0">Lexical Editor | REST + GraphQL APIs</text>
+  </g>
+
+  <!-- Arrow: Payload -> MongoDB -->
+  <line x1="380" y1="370" x2="280" y2="470" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Arrow: Payload -> R2 -->
+  <line x1="520" y1="370" x2="620" y2="470" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- MongoDB -->
+  <g filter="url(#shadow)">
+    <rect x="150" y="470" width="220" height="60" rx="8" fill="#1e3a2f" />
+    <text x="260" y="497" text-anchor="middle" font-size="14" font-weight="600" fill="#6ee7b7">MongoDB Atlas</text>
+    <text x="260" y="517" text-anchor="middle" font-size="11" fill="#a7f3d0">Mongoose Adapter</text>
+  </g>
+
+  <!-- Cloudflare R2 -->
+  <g filter="url(#shadow)">
+    <rect x="530" y="470" width="220" height="60" rx="8" fill="#1e3a2f"/>
+    <text x="640" y="497" text-anchor="middle" font-size="14" font-weight="600" fill="#6ee7b7">Cloudflare R2</text>
+    <text x="640" y="517" text-anchor="middle" font-size="11" fill="#a7f3d0">S3-compatible Storage</text>
+  </g>
+
+  <!-- External Services -->
+  <!-- Stripe -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="255" width="140" height="55" rx="8" fill="#fff" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="100" y="278" text-anchor="middle" font-size="12" font-weight="600" fill="#6366f1">Stripe</text>
+    <text x="100" y="298" text-anchor="middle" font-size="10" fill="#6b7280">Payments + Webhooks</text>
+  </g>
+  <line x1="170" y1="282" x2="280" y2="330" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowhead2)"/>
+  <defs>
+    <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1"/>
+    </marker>
+  </defs>
+
+  <!-- Resend -->
+  <g filter="url(#shadow)">
+    <rect x="730" y="255" width="140" height="55" rx="8" fill="#fff" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="800" y="278" text-anchor="middle" font-size="12" font-weight="600" fill="#f59e0b">Resend SMTP</text>
+    <text x="800" y="298" text-anchor="middle" font-size="10" fill="#6b7280">Email Delivery</text>
+  </g>
+  <line x1="730" y1="282" x2="620" y2="330" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowhead3)"/>
+  <defs>
+    <marker id="arrowhead3" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <!-- Legend -->
+  <text x="30" y="570" font-size="10" fill="#6b7280">Solid lines: direct data flow | Dashed lines: external service integration | Dashed border: deployment boundary</text>
+</svg>
