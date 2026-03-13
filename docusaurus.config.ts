@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 import {createRequire} from 'module';
 
 const require = createRequire(import.meta.url);
-const {version: appVersion} = require('../package.json');
+const {version: appVersion} = require('./package.json');
 
 const baseUrl = process.env.DOCS_BASE_URL ?? '/docs/';
 const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'https://ocfcrews.org';
@@ -22,7 +22,7 @@ const config: Config = {
   baseUrl,
 
   organizationName: 'proutyio',
-  projectName: 'ocfcrews',
+  projectName: 'ocfcrews-docs',
   trailingSlash: false,
 
   onBrokenLinks: 'warn',
@@ -46,7 +46,7 @@ const config: Config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/proutyio/ocfcrews/tree/main/docs/',
+          editUrl: 'https://github.com/proutyio/ocfcrews-docs/tree/main/',
         },
         blog: false,
         theme: {
