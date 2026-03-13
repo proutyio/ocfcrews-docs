@@ -58,17 +58,17 @@
     <text x="450" y="361" text-anchor="middle" font-size="10" fill="#a7f3d0">Lexical Editor | REST + GraphQL APIs</text>
   </g>
 
-  <!-- Arrow: Payload -> MongoDB -->
+  <!-- Arrow: Payload -> PostgreSQL -->
   <line x1="380" y1="370" x2="280" y2="470" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)"/>
 
   <!-- Arrow: Payload -> R2 -->
   <line x1="520" y1="370" x2="620" y2="470" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)"/>
 
-  <!-- MongoDB -->
+  <!-- PostgreSQL -->
   <g filter="url(#shadow)">
     <rect x="150" y="470" width="220" height="60" rx="8" fill="#1e3a2f" />
-    <text x="260" y="497" text-anchor="middle" font-size="14" font-weight="600" fill="#6ee7b7">MongoDB Atlas</text>
-    <text x="260" y="517" text-anchor="middle" font-size="11" fill="#a7f3d0">Mongoose Adapter</text>
+    <text x="260" y="497" text-anchor="middle" font-size="14" font-weight="600" fill="#6ee7b7">PostgreSQL (Supabase)</text>
+    <text x="260" y="517" text-anchor="middle" font-size="11" fill="#a7f3d0">Drizzle ORM Adapter</text>
   </g>
 
   <!-- Cloudflare R2 -->

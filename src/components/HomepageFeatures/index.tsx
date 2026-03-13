@@ -18,7 +18,7 @@ const FeatureList: FeatureItem[] = [
     icon: '\u{1f3d7}\u{fe0f}',
     description: (
       <>
-        Monolithic Next.js 15 + Payload CMS architecture with MongoDB,
+        Monolithic Next.js 15 + Payload CMS architecture with PostgreSQL,
         in-process API calls, and crew-isolated data access patterns.
       </>
     ),
