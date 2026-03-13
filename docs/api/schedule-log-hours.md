@@ -121,7 +121,7 @@ sequenceDiagram
     participant Client
     participant API as Log Hours Route
     participant Auth as Payload Auth
-    participant DB as MongoDB
+    participant DB as PostgreSQL
 
     Client->>API: POST /api/schedule/log-hours
     API->>Auth: Authenticate (cookie)

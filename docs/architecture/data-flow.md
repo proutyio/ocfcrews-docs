@@ -29,14 +29,14 @@ sequenceDiagram
     participant Browser
     participant Next as Next.js Server
     participant Payload as Payload CMS (in-process)
-    participant DB as MongoDB Atlas
+    participant DB as PostgreSQL
 
     Browser->>Next: GET /schedule
     Note over Next: Server Component executes
     Next->>Payload: getPayload() + payload.find()
     Note over Next,Payload: Direct function call (no HTTP)
-    Payload->>DB: Mongoose query
-    DB-->>Payload: Documents
+    Payload->>DB: Drizzle query
+    DB-->>Payload: Rows
     Payload-->>Next: Typed result
     Note over Next: Render React to HTML
     Next-->>Browser: HTML + RSC payload
@@ -58,7 +58,7 @@ sequenceDiagram
     participant Client as Client Component
     participant API as API Route Handler
     participant Payload as Payload CMS (in-process)
-    participant DB as MongoDB Atlas
+    participant DB as PostgreSQL
 
     Client->>Client: Optimistic UI update
     Client->>API: POST /api/schedule/sign-up
@@ -67,7 +67,7 @@ sequenceDiagram
     Payload-->>API: Authenticated user
     API->>Payload: payload.findByID() + payload.update()
     Note over API,Payload: Direct function call (no HTTP)
-    Payload->>DB: Mongoose update
+    Payload->>DB: Drizzle update
     DB-->>Payload: Updated document
     Payload-->>API: Result
     API-->>Client: JSON response
@@ -123,7 +123,7 @@ sequenceDiagram
     participant MW as Middleware
     participant Next as Next.js Server
     participant Payload as Payload CMS (in-process)
-    participant DB as MongoDB Atlas
+    participant DB as PostgreSQL
 
     Note over Browser: User submits login form
 
@@ -159,7 +159,7 @@ sequenceDiagram
     participant Browser
     participant Next as Next.js Server
     participant Payload as Payload CMS
-    participant DB as MongoDB
+    participant DB as PostgreSQL
     participant Email as Resend SMTP
 
     Browser->>Next: POST /api/users (create account form)

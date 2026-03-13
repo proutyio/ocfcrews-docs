@@ -53,7 +53,7 @@ DATABASE_URL=postgresql://postgres.abc123:secretpassword@us-east-1.pooler.supaba
 
 - **Managed PostgreSQL** — Automatic backups, monitoring, and security patches
 - **Connection pooling** — Built-in Supavisor pooler supports thousands of concurrent connections
-- **No IOPS cap** — Unlike MongoDB Atlas Flex, no throttling under load
+- **No IOPS cap** — No throttling under load
 - **Dashboard** — SQL editor, table viewer, and real-time logs
 - **Pro plan** — $25/mo for dedicated compute, 8GB storage, daily backups
 

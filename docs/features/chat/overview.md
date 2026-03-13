@@ -114,7 +114,7 @@ See the [Collections Reference](/docs/collections/chat-channels) for full field 
 ### Unread Counts
 
 - Tracked via `chat-read-state` collection (per-user-per-channel `lastReadAt`).
-- Computed via MongoDB aggregation pipeline (single query, not N+1).
+- Computed via a single efficient query (not N+1).
 - Sparse response: only non-zero counts included.
 - Badge shown on sidebar channels and navigation tab.
 - Muted channels excluded from badge counts.
@@ -174,7 +174,7 @@ All chat components are in `src/components/Chat/`:
 - **Lazy-loaded markdown**: `react-markdown` and `remark-gfm` loaded via `React.lazy()` with `Suspense` fallback.
 - **Avatar caching**: In-memory cache with 5-min TTL avoids repeated DB queries for user avatars.
 - **Adaptive polling**: Reduces server load when chat is idle (3s → 5s → 10s → 15s).
-- **Sparse unread counts**: Only non-zero channel counts in response, computed via MongoDB aggregation.
+- **Sparse unread counts**: Only non-zero channel counts in response, computed via efficient query.
 - **Map-based message dedup**: New poll results merged with existing messages using a Map, preventing unnecessary re-renders.
 - **Compound indexes**: `{ channel: 1, createdAt: -1 }` for message queries; `{ user: 1, channel: 1 }` (unique) for read state.
 

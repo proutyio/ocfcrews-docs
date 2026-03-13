@@ -5,7 +5,7 @@ title: "Integration Tests"
 
 # Integration Tests
 
-Integration tests use Vitest to validate business logic against a real Payload CMS instance connected to MongoDB.
+Integration tests use Vitest to validate business logic against a real Payload CMS instance connected to PostgreSQL.
 
 ## Vitest Configuration
 
@@ -36,7 +36,7 @@ export default defineConfig({
 | `environment` | `'jsdom'` | Provides DOM APIs for any components imported transitively |
 | `setupFiles` | `['./vitest.setup.ts']` | Loads environment variables via `dotenv/config` |
 | `include` | `['tests/int/**/*.int.spec.ts']` | Only runs `*.int.spec.ts` files |
-| `fileParallelism` | `false` | **Sequential execution** - prevents race conditions when multiple test files operate on the same MongoDB instance |
+| `fileParallelism` | `false` | **Sequential execution** - prevents race conditions when multiple test files operate on the same PostgreSQL instance |
 | `testTimeout` | `30_000` | 30-second timeout per test (database operations can be slow) |
 | `hookTimeout` | `30_000` | 30-second timeout for `beforeAll`/`afterAll` hooks |
 
@@ -66,7 +66,7 @@ beforeAll(async () => {
 })
 ```
 
-This creates a real Payload instance that connects to the MongoDB database specified in `DATABASE_URL`. The `tsconfigPaths` plugin allows using the `@/` alias.
+This creates a real Payload instance that connects to the PostgreSQL database specified in `DATABASE_URL`. The `tsconfigPaths` plugin allows using the `@/` alias.
 
 ## Test Files
 

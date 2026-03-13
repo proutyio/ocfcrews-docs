@@ -5,7 +5,7 @@ title: "Data Model Overview"
 
 # Data Model Overview
 
-OCFCrews uses [Payload CMS 3.x](https://payloadcms.com/) with MongoDB as its database. Payload automatically generates both REST and GraphQL APIs for every collection and global defined in the configuration, so all data is accessible programmatically without writing custom endpoints.
+OCFCrews uses [Payload CMS 3.x](https://payloadcms.com/) with PostgreSQL (Supabase) as its database via `@payloadcms/db-postgres` and Drizzle ORM. Payload automatically generates both REST and GraphQL APIs for every collection and global defined in the configuration, so all data is accessible programmatically without writing custom endpoints.
 
 ## Collections by Domain
 
@@ -15,9 +15,10 @@ The application defines collections organized into several domains, plus plugin-
 
 | Slug | Description |
 |------|-------------|
-| `users` | All application users -- crew members, coordinators, admins. Auth-enabled collection with JWT tokens, email verification, and password reset. Users can belong to multiple crews via crew-memberships; the user record reflects the currently active crew. |
-| `crews` | Crew organizations. Each crew has a name, camp location, coordinators, and a roster of members. |
+| `users` | All application users -- crew members, coordinators, admins. Auth-enabled collection with cookie-based sessions, email verification, and password reset. Users can belong to multiple crews via crew-memberships; the user record reflects the currently active crew. |
+| `crews` | Crew organizations. Each crew has a name, camp location, coordinators, a roster of members, and optional landing page settings for public join pages. |
 | `crew-memberships` | Multi-crew support. Links a user to a crew with a role, active status, and pass eligibility. Users can have multiple memberships but only one active at a time. Switching crews syncs the active membership's fields to the user record. |
+| `crew-applications` | Public applications to join a crew. Stores applicant info, custom question answers, and status (pending → under_review → approved / rejected / waitlisted). Coordinators review from the applications page. Approved applicants are auto-assigned or receive an invite token. |
 
 ### Scheduling
 

@@ -22,7 +22,7 @@ const result = await payload.find({ collection: 'schedules', ... })
 This means:
 - **Zero HTTP overhead**: Database queries go directly through the Payload SDK without any network round-trip
 - **No serialization cost**: Data is returned as native JavaScript objects, not parsed from JSON
-- **Shared connection pool**: The MongoDB connection pool is shared across all routes in the same process
+- **Shared connection pool**: The PostgreSQL connection pool is shared across all routes in the same process
 - **No cold-start penalty for queries**: The Payload SDK is initialized once when the Next.js server starts
 
 ## getCachedGlobal for Header, Footer, and Settings
@@ -157,9 +157,9 @@ s3Storage({
 })
 ```
 
-## MongoDB Query Efficiency
+## PostgreSQL Query Efficiency
 
-While MongoDB does not have a traditional query cache like MySQL's query cache, several factors contribute to efficient queries:
+Several factors contribute to efficient database queries:
 
 - **Indexed fields**: The `crew` field is indexed on nearly every collection, making crew-scoped `Where` clause queries efficient. See [Database Indexing](./database-indexing.md).
 - **Selective field loading**: Queries use `select` to fetch only needed fields (e.g., `select: { email: true }` for recipient resolution)
@@ -176,4 +176,4 @@ While MongoDB does not have a traditional query cache like MySQL's query cache, 
 | `getCachedPostBySlug` | Individual public posts | Tag-based + 60s time-based |
 | Next.js static generation | Public pages | `revalidatePath` / `revalidateTag` |
 | Cloudflare R2 CDN | Media files (images, docs) | Upload/replacement |
-| MongoDB indexes | Query execution plans | Automatic (WiredTiger cache) |
+| PostgreSQL indexes | Query execution plans | Automatic (shared buffer cache) |

@@ -40,12 +40,12 @@ sequenceDiagram
     participant Browser
     participant NextMiddleware as Next.js Middleware
     participant PayloadAPI as Payload API
-    participant MongoDB
+    participant DB as PostgreSQL
 
     User->>Browser: Enter email + password
     Browser->>PayloadAPI: POST /api/users/login
-    PayloadAPI->>MongoDB: Find user by email
-    MongoDB-->>PayloadAPI: User document
+    PayloadAPI->>DB: Find user by email
+    DB-->>PayloadAPI: User document
     PayloadAPI->>PayloadAPI: Verify password (bcrypt)
     PayloadAPI->>PayloadAPI: Check _verified === true
     alt Not verified
@@ -77,7 +77,7 @@ sequenceDiagram
     participant Browser
     participant PayloadAPI as Payload API
     participant EmailService as Email (Resend SMTP)
-    participant MongoDB
+    participant DB as PostgreSQL
 
     User->>Browser: Fill registration form
     Browser->>PayloadAPI: POST /api/users (create)
@@ -87,7 +87,7 @@ sequenceDiagram
     else Account creation enabled
         PayloadAPI->>PayloadAPI: Run beforeChange hooks
         Note over PayloadAPI: Auto-assign "unassigned" crew<br/>Stamp termsAcceptedAt<br/>Initialize passStatus for current year
-        PayloadAPI->>MongoDB: Insert user document
+        PayloadAPI->>DB: Insert user document
         PayloadAPI->>EmailService: Send verification email
         EmailService-->>User: Email with verify link
         PayloadAPI-->>Browser: 201 Created (user not yet verified)
@@ -95,7 +95,7 @@ sequenceDiagram
 
         User->>Browser: Click verify link in email
         Browser->>PayloadAPI: GET /verify-email?token=<token>
-        PayloadAPI->>MongoDB: Set _verified = true
+        PayloadAPI->>DB: Set _verified = true
         PayloadAPI-->>Browser: Redirect to login
         User->>Browser: Login with credentials
     end

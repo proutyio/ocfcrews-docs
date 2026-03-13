@@ -76,7 +76,7 @@ See the [Access Control Matrix](./access-control-deep-dive.md) for the complete 
 
 ### 6. Crew Isolation
 
-Most collections use MongoDB `Where` clause filters to ensure users can only access data belonging to their own crew. The `crew` field is indexed on nearly every collection to support efficient filtered queries. Non-admin users cannot create, read, or modify documents belonging to other crews. Server-side `beforeChange` hooks enforce this by stamping the authenticated user's crew ID on every write operation.
+Most collections use Payload `Where` clause filters to ensure users can only access data belonging to their own crew. The `crew` field is indexed on nearly every collection to support efficient filtered queries. Non-admin users cannot create, read, or modify documents belonging to other crews. Server-side `beforeChange` hooks enforce this by stamping the authenticated user's crew ID on every write operation.
 
 ### 7. Input Validation
 

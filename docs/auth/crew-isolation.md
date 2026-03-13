@@ -47,7 +47,7 @@ access: {
 },
 ```
 
-When an `inventory_editor` with `crewId = "abc123"` queries `GET /api/inventory-items`, Payload appends `{ crew: { equals: "abc123" } }` to the MongoDB query. The user only sees items belonging to their crew, regardless of what query parameters they include in their request.
+When an `inventory_editor` with `crewId = "abc123"` queries `GET /api/inventory-items`, Payload appends `{ crew: { equals: "abc123" } }` to the database query. The user only sees items belonging to their crew, regardless of what query parameters they include in their request.
 
 ### Reusable Factory: inventoryCrewAccess
 

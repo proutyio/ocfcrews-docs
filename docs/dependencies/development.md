@@ -11,7 +11,7 @@ All development dependencies installed in the OCFCrews project, grouped by categ
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| `vitest` | 4.0.18 | Fast unit and integration test runner powered by Vite; used for integration tests that connect to real Payload/MongoDB instances |
+| `vitest` | 4.0.18 | Fast unit and integration test runner powered by Vite; used for integration tests that connect to real Payload/PostgreSQL instances |
 | `@playwright/test` | 1.58.2 | End-to-end testing framework with multi-browser support; tests are located in `tests/e2e/` |
 | `@testing-library/react` | 16.3.0 | React component testing utilities that encourage testing from the user's perspective |
 | `jsdom` | 28.0.0 | JavaScript implementation of the DOM used as a test environment for component tests |
@@ -65,7 +65,7 @@ All development dependencies installed in the OCFCrews project, grouped by categ
 ### Test Commands
 
 ```bash
-# Run integration tests (Vitest with real Payload/MongoDB)
+# Run integration tests (Vitest with real Payload/PostgreSQL)
 pnpm test:int
 
 # Run end-to-end tests (Playwright)

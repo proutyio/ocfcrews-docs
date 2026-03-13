@@ -428,7 +428,7 @@ tests/
     └── seedCrew.ts          # Crew seed/cleanup helper
 ```
 
-Integration tests connect to a real Payload/MongoDB instance (configured via `tests/test.env`). E2E tests use Playwright to run full browser scenarios.
+Integration tests connect to a real Payload/PostgreSQL instance (configured via `tests/test.env`). E2E tests use Playwright to run full browser scenarios.
 
 ## Key Configuration Files
 

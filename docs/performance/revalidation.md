@@ -167,7 +167,7 @@ The following data is always fetched fresh (not cached via `unstable_cache`) bec
 - **User profiles**: Personal data that must reflect the latest state
 - **Crew-specific posts**: Visible only to authenticated crew members
 
-These queries go directly through the Payload SDK (in-process, no HTTP overhead) and benefit from MongoDB indexes rather than application-level caching.
+These queries go directly through the Payload SDK (in-process, no HTTP overhead) and benefit from PostgreSQL indexes rather than application-level caching.
 
 ## Disabling Revalidation
 

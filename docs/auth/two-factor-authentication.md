@@ -85,7 +85,7 @@ sequenceDiagram
     participant User
     participant Browser
     participant API as /api/auth/passkeys/*
-    participant DB as MongoDB
+    participant DB as PostgreSQL
 
     User->>Browser: Click "Add Passkey" in Security settings
     Browser->>API: POST /api/auth/passkeys/register/options
@@ -163,7 +163,7 @@ sequenceDiagram
     participant Browser
     participant API as /api/magic-link/send
     participant Email as Email Service
-    participant DB as MongoDB
+    participant DB as PostgreSQL
 
     User->>Browser: Enter email on login page
     Browser->>API: POST /api/magic-link/send { email }

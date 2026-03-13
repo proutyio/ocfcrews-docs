@@ -47,7 +47,7 @@ The **Chat Read State** collection tracks per-user-per-channel read positions fo
 
 ## Unread Count Calculation
 
-Unread counts are computed by the `computeUnreadCounts` utility using a MongoDB aggregation pipeline:
+Unread counts are computed by the `computeUnreadCounts` utility using an efficient database query:
 
 1. Find all accessible channels for the user (crew channels + global channels)
 2. For each channel, count messages where `createdAt > lastReadAt` and `deleted !== true`

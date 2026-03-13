@@ -148,15 +148,15 @@ Read-only, automatically calculated from logged time entries.
 1. **syncCrewCoordinatorsOnDelete**: When a user with `crewRole: 'coordinator'` is deleted, removes them from their crew's `coordinators` array.
 
 2. **cleanupOnUserDelete**: Cascading cleanup when a user is deleted. Deletes records from 12 collections:
-   - `passkeys`, `crew-memberships`, `push-subscriptions`, `chat-read-state`, `shift-waitlist`, `availability`, `stock-notifications`, `notifications`, `guide-bookmarks`, `recipe-favorites`, `event-rsvps`, `guide-read-receipts`
+   - `passkeys`, `crew-memberships`, `crew-applications`, `push-subscriptions`, `chat-read-state`, `shift-waitlist`, `availability`, `stock-notifications`, `notifications`, `guide-bookmarks`, `recipe-favorites`, `event-rsvps`, `guide-read-receipts`
    - Cancels pending `shift-swaps` (sets status to `cancelled`)
-   - Uses `$pull` to remove the user from `chat-channels.allowedUsers` arrays
-   - Uses `$pull` to remove the user from future `schedules` position `assignedMembers` arrays
+   - Removes the user from `chat-channels.allowedUsers` arrays
+   - Removes the user from future `schedules` position `assignedMembers` arrays
    - All operations run via `Promise.allSettled` (fire-and-forget) so partial failures don't block deletion
 
 ### `afterRead` Hooks
 
-1. **Auto-verify legacy users**: Users created before email verification was enabled may have `_verified` as `null`/`undefined`. This hook patches the in-memory doc to `_verified: true` (so JWT validation succeeds immediately) -- patches in-memory only (no background DB write to avoid MongoDB write-conflict races). The DB value gets set permanently the next time the user is updated through any code path.
+1. **Auto-verify legacy users**: Users created before email verification was enabled may have `_verified` as `null`/`undefined`. This hook patches the in-memory doc to `_verified: true` (so session validation succeeds immediately) -- patches in-memory only (no background DB write to avoid write-conflict races). The DB value gets set permanently the next time the user is updated through any code path.
 
 ### Field-Level Hooks
 

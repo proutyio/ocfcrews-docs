@@ -12,7 +12,7 @@ OCFCrews is deployed on **Vercel** using the full Node.js runtime. This is a del
 | Dependency | Requirement |
 |-----------|-------------|
 | **Payload CMS 3.x** | Requires full Node.js runtime for server-side rendering, API routes, and admin panel |
-| **MongoDB (Mongoose)** | Native TCP socket connections are not available in edge runtimes |
+| **PostgreSQL (Drizzle)** | Native TCP socket connections are not available in edge runtimes |
 | **Sharp** | Native image processing library compiled with C++ bindings (requires Node.js) |
 | **Nodemailer** | SMTP connections require TCP sockets |
 
@@ -71,11 +71,11 @@ Every pull request automatically gets a preview deployment. This is useful for:
 
 ## Vercel Functions Configuration
 
-Payload CMS API routes and Next.js server-side rendering run as **Vercel Serverless Functions** (not Edge Functions). This is required for MongoDB connectivity and Sharp image processing.
+Payload CMS API routes and Next.js server-side rendering run as **Vercel Serverless Functions** (not Edge Functions). This is required for PostgreSQL connectivity and Sharp image processing.
 
 ### Function Regions
 
-Configure the function region close to your MongoDB Atlas cluster for lowest latency. For example, if your Atlas cluster is in `us-east-1`, set the Vercel function region to `iad1` (US East - N. Virginia).
+Configure the function region close to your Supabase PostgreSQL instance for lowest latency. For example, if your Supabase project is in `us-east-1`, set the Vercel function region to `iad1` (US East - N. Virginia).
 
 This can be configured in `vercel.json` or the Vercel dashboard under Project Settings > Functions.
 

@@ -24,8 +24,8 @@ The `guide-read-receipts` collection tracks when each crew member reads a guide.
 
 ## Access Control
 
-- **Coordinators and Elders** can see all read receipts for their crew — showing who has and hasn't read each guide
-- **Regular members** only see their own read status
+- **Coordinators** can see all read receipts for their crew — showing who has and hasn't read each guide
+- **Regular members** (including elders and leaders) only see their own read status
 - Admins can see all read receipts
 
 ## Related

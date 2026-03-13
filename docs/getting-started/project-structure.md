@@ -231,7 +231,7 @@ src/
 tests/
 ├── vitest.setup.ts           # Vitest global setup (loads dotenv)
 ├── test.env                  # Environment variables for test runs
-├── int/                      # Vitest integration tests (real Payload + MongoDB)
+├── int/                      # Vitest integration tests (real Payload + PostgreSQL)
 ├── e2e/                      # Playwright end-to-end tests
 └── helpers/
     └── seedCrew.ts           # Crew seed/cleanup helper for e2e tests
@@ -243,7 +243,7 @@ tests/
 
 The root Payload CMS configuration. Defines:
 - All collections and globals registered with the CMS
-- Database adapter (`@payloadcms/db-mongodb`)
+- Database adapter (`@payloadcms/db-postgres` with Drizzle ORM)
 - Rich text editor (Lexical with bold, italic, underline, lists, links, indent, tables)
 - Email adapter (conditionally enabled with Resend)
 - S3 storage (conditionally enabled with R2)

@@ -19,7 +19,7 @@ Access control functions receive the request context and return one of three thi
 | `false` | No access -- operation denied entirely |
 | `Where` clause | Filtered access -- only matching documents are visible/editable |
 
-The `Where` clause approach is key to crew isolation. Instead of granting or denying access entirely, the access function returns a MongoDB query filter that limits results to the user's crew.
+The `Where` clause approach is key to crew isolation. Instead of granting or denying access entirely, the access function returns a database query filter that limits results to the user's crew.
 
 ### Operation Types
 

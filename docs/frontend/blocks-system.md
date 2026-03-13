@@ -15,7 +15,7 @@ Blocks are defined as Payload `Block` configurations that specify the fields ava
 
 ```
 Payload Admin (editor adds blocks)
-  → Page document stored in MongoDB with layout: [{ blockType, blockName, ...fields }]
+  → Page document stored in PostgreSQL with layout: [{ blockType, blockName, ...fields }]
     → Server component fetches page data
       → RenderBlocks iterates over blocks array
         → Each block rendered by its matching React component

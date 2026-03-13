@@ -46,7 +46,7 @@ sequenceDiagram
     participant Client as Browser
     participant API as /api/schedule/sign-up
     participant Auth as Payload Auth
-    participant DB as MongoDB
+    participant DB as PostgreSQL
 
     Client->>API: POST { shiftId, positionIndex, action }
     API->>Auth: payload.auth({ headers })
@@ -129,7 +129,7 @@ The API uses a **double-read strategy** to minimize race conditions:
 1. **First read**: Fetches the schedule to perform validation checks (past-shift guard, crew membership, permissions).
 2. **Second read**: Re-fetches the schedule immediately before writing to get the freshest data. This minimizes the window between reading the current state and writing the update.
 
-While this does not provide true transactional guarantees (MongoDB does not support optimistic locking on subdocuments), it reduces the race window to sub-millisecond levels, which is sufficient for the expected concurrency of crew scheduling.
+While this does not provide true transactional guarantees (optimistic locking on JSON array subdocuments is not used), it reduces the race window to sub-millisecond levels, which is sufficient for the expected concurrency of crew scheduling.
 
 ## Authorization for Remove Action
 

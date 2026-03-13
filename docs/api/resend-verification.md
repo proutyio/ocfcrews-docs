@@ -99,7 +99,7 @@ Note that only input validation errors produce error responses. All business log
 sequenceDiagram
     participant Client
     participant API as Resend Verification Route
-    participant DB as MongoDB
+    participant DB as PostgreSQL
     participant SMTP as Resend SMTP
 
     Client->>API: POST /api/resend-verification { email }

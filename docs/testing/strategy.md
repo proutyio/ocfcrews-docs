@@ -11,7 +11,7 @@ OCFCrews uses a **two-tier testing approach** that prioritizes real-world accura
 
 ### Tier 1: Integration Tests (Vitest)
 
-Integration tests validate business logic by running against the **real Payload SDK connected to a real MongoDB instance**. These tests exercise:
+Integration tests validate business logic by running against the **real Payload SDK connected to a real PostgreSQL instance**. These tests exercise:
 
 - Collection access control (crew isolation, role-based permissions)
 - Hook logic (e.g., transaction hooks that update inventory amounts)
@@ -46,7 +46,7 @@ The project deliberately avoids mocking the database layer for integration tests
 
 3. **Relationship validation requires real documents.** Tests that verify crew isolation need actual crew, user, and schedule documents to exist in the database so that foreign key relationships are enforced.
 
-4. **MongoDB-specific behavior matters.** The project uses the Mongoose adapter, and real tests catch issues like ObjectId casting, index uniqueness, and transaction semantics.
+4. **Database-specific behavior matters.** The project uses the `@payloadcms/db-postgres` adapter (Drizzle ORM), and real tests catch issues like UUID handling, index uniqueness, and transaction semantics.
 
 ## Test File Organization
 

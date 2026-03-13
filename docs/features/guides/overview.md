@@ -66,7 +66,7 @@ The sidebar uses a search box to filter guides by title. Pinned guides always ap
 | Delete own comments | Comment author |
 | Delete any comment in crew | Coordinator, Admin |
 | Upload file attachments | All confirmed crew members |
-| View read receipts | Coordinator, Elder, Admin |
+| View read receipts | Coordinator, Admin |
 | Manage required reading | Coordinator, Admin |
 
 Crew guides are **crew-scoped** — a member can only see guides from their own crew. Admins can view and edit any crew's guides.
@@ -114,8 +114,8 @@ Guides support **file attachments** (PDFs, images, text files). Each attachment 
 
 The platform tracks when each crew member reads a guide via the `guide-read-receipts` collection. Read receipts record a `lastReadAt` timestamp and are automatically created when viewing a published guide (fire-and-forget POST with `useRef` to prevent duplicates).
 
-- **Coordinators and Elders** can see who has and hasn't read each guide
-- **Regular members** only see their own read status
+- **Coordinators** can see who has and hasn't read each guide
+- **Regular members** (including elders and leaders) only see their own read status
 
 ## Required Reading
 

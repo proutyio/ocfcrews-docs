@@ -35,6 +35,19 @@ The **Crews** collection represents the organizational units (crews/camps) in th
 | `stripeOnboardingComplete` | checkbox | No | Default: `false` | Whether the Stripe Connect onboarding flow has been completed for this crew. |
 | `stripePaymentsEnabled` | checkbox | No | Default: `true` | When disabled, checkout is blocked for products scoped to this crew. |
 
+### `landingPage` Group
+
+Configures the public join page for recruiting new volunteers. These fields are nested under the `landingPage` group.
+
+| Field | Type | Required | Constraints | Description |
+|---|---|---|---|---|
+| `joinEnabled` | checkbox | No | Default: `false` | When enabled, a public join page is available at `/crews/[slug]/join`. |
+| `welcomeMessage` | textarea | No | maxLength: 2000 | Welcome message shown on the join page. Supports markdown. |
+| `requirements` | array | No | maxRows: 20 | Requirements for joining the crew. Each row has a `text` (required, maxLength: 500). |
+| `agreements` | array | No | maxRows: 20 | Agreements applicants must acknowledge. Each row has a `text` (required, maxLength: 500) and optional `required` checkbox (default: `true`). |
+| `faq` | array | No | maxRows: 30 | FAQ entries displayed on the join page. Each row has `question` (required, maxLength: 200) and `answer` (required, maxLength: 2000, supports markdown). |
+| `applicationFields` | array | No | maxRows: 10 | Custom questions on the application form. Each row has `label` (required, maxLength: 200), `required` checkbox, and `type` select (`short_text` or `long_text`). |
+
 ### Joins
 
 | Join Field | Collection | Foreign Key | Description |

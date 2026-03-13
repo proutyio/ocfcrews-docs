@@ -44,31 +44,22 @@ corepack enable
 corepack prepare pnpm@latest --activate
 ```
 
-### MongoDB
+### PostgreSQL
 
-OCFCrews uses MongoDB as its database through Payload CMS's Mongoose adapter. You need either:
+OCFCrews uses PostgreSQL as its database through Payload CMS's `@payloadcms/db-postgres` adapter (Drizzle ORM). You need either:
 
-- **MongoDB Atlas** (cloud-hosted) -- recommended for quick setup. Create a free cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas).
-- **Local MongoDB** -- install via your system's package manager or [download directly](https://www.mongodb.com/try/download/community).
-
-A **replica set** is recommended (and required for MongoDB transactions). MongoDB Atlas clusters use replica sets by default. For a local single-node replica set:
-
-```bash
-# Start mongod with replica set
-mongod --replSet rs0
-
-# In another terminal, initialize the replica set
-mongosh --eval "rs.initiate()"
-```
+- **Supabase** (cloud-hosted) -- used in production. Create a free project at [supabase.com](https://supabase.com/).
+- **Local PostgreSQL** -- install via your system's package manager, [Homebrew](https://formulae.brew.sh/formula/postgresql), or [download directly](https://www.postgresql.org/download/).
+- **Docker** -- `docker run --name ocfcrews-pg -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres:16`
 
 Your connection string will look like:
 
 ```
-# Atlas
-mongodb+srv://user:password@cluster.mongodb.net/ocfcrews
+# Supabase
+postgresql://postgres.[ref]:[password]@aws-0-us-west-1.pooler.supabase.com:6543/postgres
 
 # Local
-mongodb://127.0.0.1/ocfcrews
+postgresql://localhost:5432/ocfcrews
 ```
 
 ### Git

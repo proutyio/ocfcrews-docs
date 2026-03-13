@@ -5,15 +5,15 @@ title: "Database Indexing"
 
 # Database Indexing
 
-OCFCrews uses MongoDB indexes extensively to ensure fast query performance, particularly for crew-scoped queries that filter by the `crew` field. Payload CMS automatically creates MongoDB indexes for fields marked with `index: true` in the collection configuration.
+OCFCrews uses PostgreSQL indexes extensively to ensure fast query performance, particularly for crew-scoped queries that filter by the `crew` field. Payload CMS automatically creates indexes for fields marked with `index: true` in the collection configuration via the `@payloadcms/db-postgres` adapter (Drizzle ORM).
 
 ## Why Indexes Matter
 
-Without indexes, MongoDB must perform a collection scan (examine every document) to find matching records. With crew isolation enforcing `{ crew: { equals: crewId } }` Where clauses on nearly every query, the `crew` field index is critical for performance.
+Without indexes, PostgreSQL must perform a sequential scan (examine every row) to find matching records. With crew isolation enforcing `{ crew: { equals: crewId } }` Where clauses on nearly every query, the `crew` field index is critical for performance.
 
-For a collection with 10,000 documents across 20 crews:
-- **Without index**: MongoDB scans all 10,000 documents to find the ~500 belonging to one crew
-- **With index**: MongoDB directly looks up the ~500 matching documents using the B-tree index
+For a table with 10,000 rows across 20 crews:
+- **Without index**: PostgreSQL scans all 10,000 rows to find the ~500 belonging to one crew
+- **With index**: PostgreSQL directly looks up the ~500 matching rows using the B-tree index
 
 ## Indexed Fields by Collection
 
@@ -187,7 +187,7 @@ Every access control function that returns a `Where` clause like `{ crew: { equa
 
 ## Compound Query Patterns
 
-Some queries effectively use multiple indexed fields. MongoDB can combine individual indexes or use compound indexes for these patterns:
+Some queries effectively use multiple indexed fields. PostgreSQL can combine individual indexes or use compound indexes for these patterns:
 
 | Query Pattern | Fields Used | Example |
 |--------------|------------|---------|
@@ -214,8 +214,8 @@ In addition to explicitly marked `index: true` fields, Payload CMS automatically
 
 ## Performance Considerations
 
-1. **Index selectivity**: The `crew` index is highly selective in multi-tenant scenarios. With 20 crews, each query immediately eliminates ~95% of documents.
+1. **Index selectivity**: The `crew` index is highly selective in multi-tenant scenarios. With 20 crews, each query immediately eliminates ~95% of rows.
 
 2. **Write overhead**: Each index slightly increases write time (insert/update must update the index). The collections with the most indexes (Inventory Items with 5 custom indexes) are still well within acceptable limits for the write patterns in this application.
 
-3. **Memory**: MongoDB's WiredTiger storage engine keeps frequently-used indexes in memory. For the expected data volumes (hundreds to low thousands of documents per collection), the entire index set fits comfortably in memory.
+3. **Memory**: PostgreSQL keeps frequently-used indexes in its shared buffer cache. For the expected data volumes (hundreds to low thousands of rows per table), the entire index set fits comfortably in memory.

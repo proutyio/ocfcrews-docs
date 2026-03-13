@@ -173,7 +173,7 @@ sequenceDiagram
     participant Client
     participant API as Send Email Route
     participant Auth as Payload Auth
-    participant DB as MongoDB
+    participant DB as PostgreSQL
     participant SMTP as Resend SMTP
 
     Client->>API: POST /api/send-email { emailId }

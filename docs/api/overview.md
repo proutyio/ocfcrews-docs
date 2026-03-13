@@ -84,6 +84,9 @@ These are hand-written Next.js route handlers located under `src/app/(app)/api/`
 | `/api/auth/passkeys/login/options` | POST | Generate passkey login options | No |
 | `/api/auth/passkeys/login/verify` | POST | Verify passkey assertion and create session | No |
 | `/api/auth/passkeys` | GET/DELETE | List or delete passkeys | Yes |
+| `/api/crews/[crewId]/apply` | POST | Submit a public crew application (Turnstile + CSRF) | No |
+| `/api/crews/[crewId]/applications` | GET | List applications for a crew | Yes (coordinator+) |
+| `/api/crews/[crewId]/applications/[id]` | PATCH | Review an application (change status, add notes) | Yes (coordinator+) |
 
 ## Payload REST API
 
@@ -144,6 +147,21 @@ Payload CMS automatically generates a full REST API for every registered collect
 | Issues | `/api/issues` |
 | Page Views | `/api/page-views` |
 | Page Views Daily | `/api/page-views-daily` |
+| Crew Applications | `/api/crew-applications` |
+| Crew Memberships | `/api/crew-memberships` |
+| Crew Events | `/api/crew-events` |
+| Event RSVPs | `/api/event-rsvps` |
+| Scheduled Emails | `/api/scheduled-emails` |
+| Push Subscriptions | `/api/push-subscriptions` |
+| Chat Channels | `/api/chat-channels` |
+| Chat Messages | `/api/chat-messages` |
+| Chat Media | `/api/chat-media` |
+| Chat Read State | `/api/chat-read-state` |
+| Guide Tags | `/api/guide-tags` |
+| Schedule Weeks | `/api/schedule-weeks` |
+| Schedule Templates | `/api/schedule-templates` |
+| Event Periods | `/api/event-periods` |
+| Meal Logs | `/api/meal-logs` |
 
 ### Available Global Endpoints
 
@@ -160,7 +178,7 @@ Payload also generates a GraphQL API accessible at `/api/graphql`. A GraphQL Pla
 
 ## Authentication
 
-All API requests (except the resend-verification endpoint) require authentication via Payload's cookie-based auth system. The session cookie is set during login and included automatically by the browser. For programmatic access, include the `Authorization` header with a valid JWT token:
+All API requests (except public endpoints like resend-verification and crew applications) require authentication via Payload's cookie-based auth system. The session cookie is set during login and included automatically by the browser. For programmatic access, include the `Authorization` header with a valid token:
 
 ```
 Authorization: JWT <token>

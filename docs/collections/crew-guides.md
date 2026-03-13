@@ -52,7 +52,7 @@ Up to 25 versions are retained per document. Drafts are not used (the `status` f
 | View own draft | Author, admin |
 | Create | All confirmed crew members |
 | Edit own | Author |
-| Edit any (own crew) | Coordinator, elder, admin |
+| Edit any (own crew) | All confirmed crew members |
 | Delete | Coordinator, admin |
 | Pin / change category | Coordinator, elder, admin |
 

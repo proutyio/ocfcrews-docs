@@ -131,7 +131,7 @@ The current implementation fetches up to 10,000 time entries for a user on every
 
 If a user were to accumulate thousands of time entries, the aggregation could be optimized by:
 
-- Using MongoDB aggregation pipelines instead of application-level grouping
+- Using PostgreSQL aggregate queries instead of application-level grouping
 - Incrementally updating rather than fully recalculating
 - Caching intermediate results
 
