@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCF Crews — Capacity Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0a0f1a;
+    color: #e2e8f0;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 60px 0 40px;
+    position: relative;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 4px;
+    background: linear-gradient(90deg, #10b981, #3b82f6);
+    border-radius: 2px;
+  }
+  .header h1 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    font-weight: 400;
+  }
+  .header .meta {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-size: 0.8rem;
+    color: #64748b;
+    flex-wrap: wrap;
+  }
+  .header .meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .header .meta .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #334155;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-top: 48px;
+  }
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #10b981;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    margin-bottom: 20px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 16px;
+  }
+  .card-dark {
+    background: #0d1321;
+  }
+
+  /* ── Hero Gauge ── */
+  .hero-gauge {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .gauge-card {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .gauge-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .gauge-card.green::before { background: linear-gradient(90deg, #059669, #10b981); }
+  .gauge-card.yellow::before { background: linear-gradient(90deg, #d97706, #f59e0b); }
+  .gauge-card.red::before { background: linear-gradient(90deg, #dc2626, #ef4444); }
+
+  .gauge-card .emoji { font-size: 2rem; margin-bottom: 8px; }
+  .gauge-card .number {
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+  .gauge-card.green .number { color: #10b981; }
+  .gauge-card.yellow .number { color: #f59e0b; }
+  .gauge-card.red .number { color: #ef4444; }
+  .gauge-card .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+  .gauge-card .desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  /* ── Bottleneck indicator ── */
+  .bottleneck-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 12px;
+  }
+  .bottleneck-row:last-child { margin-bottom: 0; }
+  .bottleneck-bar-bg {
+    flex: 1;
+    height: 32px;
+    background: #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bottleneck-bar {
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    transition: width 0.6s ease;
+  }
+  .bottleneck-label {
+    width: 180px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    flex-shrink: 0;
+  }
+  .bottleneck-severity {
+    width: 80px;
+    text-align: right;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── Architecture diagram ── */
+  .arch-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    align-items: center;
+    text-align: center;
+  }
+  .arch-tier {
+    padding: 20px;
+    position: relative;
+  }
+  .arch-tier::after {
+    content: '';
+    display: block;
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(to bottom, #334155, transparent);
+    margin: 12px auto 0;
+  }
+  .arch-tier:last-child::after { display: none; }
+  .arch-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .arch-box {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .arch-box.client { background: #1e1b4b; border-color: #4338ca; color: #a5b4fc; }
+  .arch-box.edge { background: #1c1917; border-color: #a16207; color: #fbbf24; }
+  .arch-box.compute { background: #022c22; border-color: #059669; color: #6ee7b7; }
+  .arch-box.data { background: #1e293b; border-color: #3b82f6; color: #93c5fd; }
+  .arch-box.service { background: #1a1625; border-color: #7c3aed; color: #c4b5fd; }
+  .arch-box.bottleneck {
+    background: #1c1917;
+    border-color: #d97706;
+    color: #fbbf24;
+  }
+
+  .arch-tier-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #64748b;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  /* ── Connection meter ── */
+  .conn-meter {
+    margin-top: 24px;
+  }
+  .conn-meter-bar-bg {
+    width: 100%;
+    height: 40px;
+    background: #1e293b;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+  }
+  .conn-meter-seg {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+    transition: width 0.8s ease;
+  }
+  .conn-meter-seg.safe { background: linear-gradient(90deg, #059669, #10b981); }
+  .conn-meter-seg.warn { background: linear-gradient(90deg, #d97706, #f59e0b); }
+  .conn-meter-seg.danger { background: linear-gradient(90deg, #dc2626, #ef4444); }
+  .conn-meter-seg.empty { background: transparent; }
+  .conn-meter-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+  .conn-meter-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .conn-tick {
+    text-align: center;
+    font-size: 0.65rem;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  .conn-tick .num { font-size: 1rem; display: block; }
+
+  /* ── IOPS meter ── */
+  .iops-meter {
+    margin-top: 24px;
+  }
+  .iops-meter-bar-bg {
+    width: 100%;
+    height: 32px;
+    background: #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+  }
+  .iops-seg {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  /* ── Chat load ── */
+  .chat-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 180px;
+    padding: 0 20px;
+    margin: 20px 0 8px;
+  }
+  .chat-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .chat-bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    min-height: 4px;
+    position: relative;
+  }
+  .chat-bar .val {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .chat-bar-label {
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .chat-bar-status {
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  /* ── Feature load grid ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .feature-card {
+    background: #0d1321;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .feature-info { flex: 1; min-width: 0; }
+  .feature-name { font-size: 0.85rem; font-weight: 600; color: #e2e8f0; }
+  .feature-detail { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+  .feature-load {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .load-low { background: #064e3b; color: #6ee7b7; }
+  .load-med { background: #1e3a5f; color: #93c5fd; }
+  .load-high { background: #7c2d12; color: #fdba74; }
+  .load-critical { background: #450a0a; color: #fca5a5; }
+
+  /* ── Scaling roadmap ── */
+  .roadmap {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .roadmap-col {
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .roadmap-header {
+    padding: 16px 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .roadmap-header.quick { background: #064e3b; color: #6ee7b7; }
+  .roadmap-header.mid { background: #1e3a5f; color: #93c5fd; }
+  .roadmap-header.long { background: #3b0764; color: #d8b4fe; }
+  .roadmap-item {
+    padding: 16px 20px;
+    border-top: 1px solid #1e293b;
+  }
+  .roadmap-item-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+  }
+  .roadmap-item-desc {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+  .roadmap-item-cost {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #1e293b;
+    color: #cbd5e1;
+  }
+
+  /* ── Capacity projection ── */
+  .projection-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .projection-label {
+    width: 150px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    flex-shrink: 0;
+  }
+  .projection-label small {
+    display: block;
+    font-size: 0.65rem;
+    color: #64748b;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .projection-track {
+    flex: 1;
+    height: 28px;
+    background: #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .projection-fill {
+    height: 100%;
+    border-radius: 8px;
+    position: relative;
+  }
+  .projection-fill .marker {
+    position: absolute;
+    right: -1px;
+    top: -6px;
+    bottom: -6px;
+    width: 3px;
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(255,255,255,0.3);
+  }
+  .projection-num {
+    width: 80px;
+    text-align: right;
+    font-size: 1.1rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  /* ── Cost table ── */
+  .cost-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .cost-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .cost-card {
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .cost-header {
+    padding: 16px 24px;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .cost-row {
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    border-top: 1px solid #1e293b;
+  }
+  .cost-row.total {
+    background: #111827;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .cost-row .amt { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .cost-row .amt.free { color: #10b981; }
+  .cost-per-user {
+    padding: 10px 24px;
+    border-top: 1px solid #1e293b;
+    font-size: 0.7rem;
+    color: #64748b;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* ── Scenarios ── */
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .scenario-card {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .scenario-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .scenario-card.ok::before { background: #10b981; }
+  .scenario-card.warn::before { background: #f59e0b; }
+  .scenario-card.bad::before { background: #ef4444; }
+  .scenario-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 12px;
+  }
+  .scenario-stat {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .scenario-stat .val { font-weight: 600; color: #cbd5e1; }
+  .scenario-verdict {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #1e293b;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .scenario-verdict.ok { color: #10b981; }
+  .scenario-verdict.warn { color: #f59e0b; }
+  .scenario-verdict.bad { color: #ef4444; }
+
+  /* ── Summary callout ── */
+  .summary-callout {
+    background: linear-gradient(135deg, #064e3b 0%, #1e3a5f 100%);
+    border: 1px solid #10b981;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+  }
+  .summary-callout h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    margin-bottom: 12px;
+  }
+  .summary-callout p {
+    font-size: 0.9rem;
+    color: #a7f3d0;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── Flex info callout ── */
+  .flex-info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .flex-stat {
+    background: #0d1321;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .flex-stat .val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .flex-stat .lbl {
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .hero-gauge { grid-template-columns: 1fr; }
+    .roadmap { grid-template-columns: 1fr; }
+    .scenario-grid { grid-template-columns: 1fr; }
+    .cost-grid { grid-template-columns: 1fr; }
+    .cost-grid-4 { grid-template-columns: 1fr 1fr; }
+    .header h1 { font-size: 2rem; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .flex-info { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid #1e293b;
+    font-size: 0.7rem;
+    color: #475569;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Capacity Report</h1>
+    <div class="subtitle">OCF Crews Infrastructure Analysis</div>
+    <div class="meta">
+      <span><span class="dot"></span> Next.js 15 + Payload CMS 3.76</span>
+      <span><span class="dot"></span> Vercel Pro</span>
+      <span><span class="dot"></span> MongoDB Atlas Flex</span>
+      <span><span class="dot"></span> March 2026</span>
+    </div>
+  </div>
+
+  <!-- CAPACITY TIERS -->
+  <div class="section">
+    <div class="section-label">Concurrent User Capacity</div>
+    <div class="section-title">How many users before things break?</div>
+    <div class="hero-gauge">
+      <div class="gauge-card green">
+        <div class="emoji">&#x2705;</div>
+        <div class="number">30 &#x2013; 60</div>
+        <div class="label">Comfortable</div>
+        <div class="desc">Sub-200ms responses. Flex auto-scales IOPS smoothly. No issues.</div>
+      </div>
+      <div class="gauge-card yellow">
+        <div class="emoji">&#x26A0;&#xFE0F;</div>
+        <div class="number">60 &#x2013; 120</div>
+        <div class="label">Stressed</div>
+        <div class="desc">Occasional spikes. Flex IOPS cap (500 ops/s) approached. Chat polling adds pressure.</div>
+      </div>
+      <div class="gauge-card red">
+        <div class="emoji">&#x1F4A5;</div>
+        <div class="number">120 &#x2013; 175+</div>
+        <div class="label">Breaking Point</div>
+        <div class="desc">Connection pool exhaustion (500 max). IOPS saturated. Timeouts likely.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ATLAS FLEX DETAILS -->
+  <div class="section">
+    <div class="section-label">Current Database Tier</div>
+    <div class="section-title">MongoDB Atlas Flex Cluster</div>
+    <div class="flex-info">
+      <div class="flex-stat">
+        <div class="val" style="color:#f59e0b;">500</div>
+        <div class="lbl">Max Connections</div>
+      </div>
+      <div class="flex-stat">
+        <div class="val" style="color:#10b981;">100&#x2013;500</div>
+        <div class="lbl">Ops/sec (auto-scale)</div>
+      </div>
+      <div class="flex-stat">
+        <div class="val" style="color:#3b82f6;">5 GB</div>
+        <div class="lbl">Included Storage</div>
+      </div>
+      <div class="flex-stat">
+        <div class="val" style="color:#a78bfa;">$8&#x2013;30</div>
+        <div class="lbl">Monthly (capped)</div>
+      </div>
+    </div>
+    <div class="card" style="padding:20px 24px; font-size:0.8rem; color:#94a3b8; line-height:1.6;">
+      <strong style="color:#fbbf24;">Flex vs. M0 (Free):</strong> Same 500-connection limit, but Flex has <strong style="color:#e2e8f0;">dedicated IOPS</strong> (not shared) that auto-scale from 100 to 500 ops/sec.
+      Storage is 10&times; larger (5GB vs 512MB). No random throttling from noisy neighbors.
+      <br><strong style="color:#fbbf24;">Flex vs. M10 (Dedicated):</strong> M10 offers 1,500 connections, dedicated RAM (2GB), and uncapped IOPS.
+      The jump from Flex to M10 is the <strong style="color:#e2e8f0;">single highest-impact upgrade</strong> for scaling.
+    </div>
+  </div>
+
+  <!-- BOTTLENECK RANKINGS -->
+  <div class="section">
+    <div class="section-label">Bottleneck Analysis</div>
+    <div class="section-title">What will fail first?</div>
+    <div class="card">
+      <div class="bottleneck-row">
+        <div class="bottleneck-label">Atlas Flex (500 conn)</div>
+        <div class="bottleneck-bar-bg">
+          <div class="bottleneck-bar" style="width: 85%; background: linear-gradient(90deg, #d97706, #ef4444);">
+            500 connections / 500 ops/s cap / 5GB
+          </div>
+        </div>
+        <div class="bottleneck-severity" style="color: #ef4444;">CRITICAL</div>
+      </div>
+      <div class="bottleneck-row">
+        <div class="bottleneck-label">Chat HTTP Polling</div>
+        <div class="bottleneck-bar-bg">
+          <div class="bottleneck-bar" style="width: 70%; background: linear-gradient(90deg, #d97706, #f59e0b);">
+            ~10 req/min per active user &mdash; no WebSockets
+          </div>
+        </div>
+        <div class="bottleneck-severity" style="color: #f59e0b;">HIGH</div>
+      </div>
+      <div class="bottleneck-row">
+        <div class="bottleneck-label">Flex IOPS Cap</div>
+        <div class="bottleneck-bar-bg">
+          <div class="bottleneck-bar" style="width: 55%; background: linear-gradient(90deg, #d97706, #f59e0b);">
+            500 ops/s max &mdash; hard ceiling under load
+          </div>
+        </div>
+        <div class="bottleneck-severity" style="color: #f59e0b;">HIGH</div>
+      </div>
+      <div class="bottleneck-row">
+        <div class="bottleneck-label">Rate Limiter (in-memory)</div>
+        <div class="bottleneck-bar-bg">
+          <div class="bottleneck-bar" style="width: 45%; background: linear-gradient(90deg, #2563eb, #3b82f6);">
+            Per-instance only &mdash; not shared across fleet
+          </div>
+        </div>
+        <div class="bottleneck-severity" style="color: #3b82f6;">MEDIUM</div>
+      </div>
+      <div class="bottleneck-row">
+        <div class="bottleneck-label">Vercel Serverless</div>
+        <div class="bottleneck-bar-bg">
+          <div class="bottleneck-bar" style="width: 25%; background: linear-gradient(90deg, #059669, #10b981);">
+            ~1000 concurrent executions on Pro
+          </div>
+        </div>
+        <div class="bottleneck-severity" style="color: #10b981;">LOW</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="section">
+    <div class="section-label">System Architecture</div>
+    <div class="section-title">Request flow &amp; infrastructure</div>
+    <div class="card card-dark">
+      <div class="arch-grid">
+        <div class="arch-tier">
+          <div class="arch-tier-label">Clients</div>
+          <div class="arch-boxes">
+            <div class="arch-box client">&#x1F4F1; Browser / PWA</div>
+          </div>
+        </div>
+        <div class="arch-tier">
+          <div class="arch-tier-label">Edge</div>
+          <div class="arch-boxes">
+            <div class="arch-box edge">&#x26A1; Cloudflare R2 (CDN Assets)</div>
+          </div>
+        </div>
+        <div class="arch-tier">
+          <div class="arch-tier-label">Compute &mdash; Vercel Pro</div>
+          <div class="arch-boxes">
+            <div class="arch-box compute">&#x2699;&#xFE0F; Next.js 15 App Router</div>
+            <div class="arch-box compute">&#x1F4E1; ~130 API Routes</div>
+            <div class="arch-box compute">&#x23F0; 6 Cron Jobs</div>
+          </div>
+        </div>
+        <div class="arch-tier">
+          <div class="arch-tier-label">Data &amp; Services</div>
+          <div class="arch-boxes">
+            <div class="arch-box bottleneck">&#x1F5C4;&#xFE0F; MongoDB Flex ($8&#x2013;30/mo) &mdash; BOTTLENECK</div>
+            <div class="arch-box service">&#x1F4E7; Resend</div>
+            <div class="arch-box service">&#x1F4B3; Stripe</div>
+            <div class="arch-box service">&#x1F4DE; Twilio</div>
+            <div class="arch-box service">&#x1F41B; Sentry</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONGODB CONNECTION METER -->
+  <div class="section">
+    <div class="section-label">Primary Constraint</div>
+    <div class="section-title">Flex Connection &amp; IOPS Saturation</div>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:0.8rem; flex-wrap:wrap; gap:8px;">
+        <span style="color:#94a3b8;"><strong>maxPoolSize:</strong> 6 per serverless instance</span>
+        <span style="color:#94a3b8;"><strong>Cluster limit:</strong> 500 connections</span>
+        <span style="color:#94a3b8;"><strong>IOPS cap:</strong> 100&#x2013;500 ops/sec</span>
+      </div>
+
+      <div style="font-size:0.75rem; font-weight:600; color:#cbd5e1; margin:20px 0 6px;">Connection Usage</div>
+      <div class="conn-meter">
+        <div class="conn-meter-bar-bg">
+          <div class="conn-meter-seg safe" style="width: 24%;">0&#x2013;120</div>
+          <div class="conn-meter-seg warn" style="width: 48%;">120&#x2013;360</div>
+          <div class="conn-meter-seg danger" style="width: 22%;">360&#x2013;500</div>
+          <div class="conn-meter-seg empty" style="width: 6%;"></div>
+        </div>
+        <div class="conn-meter-labels">
+          <span>0</span>
+          <span>100</span>
+          <span>200</span>
+          <span>300</span>
+          <span>400</span>
+          <span style="color:#ef4444; font-weight:700;">500 MAX</span>
+        </div>
+      </div>
+      <div class="conn-meter-ticks" style="margin-top:20px;">
+        <div class="conn-tick" style="flex:1; text-align:left;">
+          <span class="num" style="color:#10b981;">10&#x2013;20</span>
+          instances<br>= 60&#x2013;120 conn
+        </div>
+        <div class="conn-tick" style="flex:1;">
+          <span class="num" style="color:#f59e0b;">40&#x2013;60</span>
+          instances<br>= 240&#x2013;360 conn
+        </div>
+        <div class="conn-tick" style="flex:1; text-align:right;">
+          <span class="num" style="color:#ef4444;">80+</span>
+          instances<br>= 480+ conn &#x1F4A5;
+        </div>
+      </div>
+
+      <div style="font-size:0.75rem; font-weight:600; color:#cbd5e1; margin:28px 0 6px;">IOPS Usage (ops/sec)</div>
+      <div class="iops-meter">
+        <div class="iops-meter-bar-bg">
+          <div class="iops-seg" style="width:20%; background:linear-gradient(90deg, #059669, #10b981);">0&#x2013;100</div>
+          <div class="iops-seg" style="width:40%; background:linear-gradient(90deg, #10b981, #f59e0b);">100&#x2013;300</div>
+          <div class="iops-seg" style="width:30%; background:linear-gradient(90deg, #d97706, #ef4444);">300&#x2013;500</div>
+          <div class="iops-seg" style="width:10%; background:#1e293b; color:#ef4444; font-size:0.65rem;">CAP</div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:0.7rem; color:#64748b;">
+          <span>Base (idle)</span>
+          <span>Light load</span>
+          <span>Peak burst</span>
+          <span style="color:#ef4444; font-weight:700;">500 MAX</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT POLLING LOAD -->
+  <div class="section">
+    <div class="section-label">Secondary Bottleneck</div>
+    <div class="section-title">Chat Polling Load (No WebSockets)</div>
+    <div class="card">
+      <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:4px;">
+        Requests per minute from chat polling by concurrent chat users
+      </div>
+      <div class="chat-bars">
+        <div class="chat-bar-col">
+          <div class="chat-bar" style="height:10%; background:linear-gradient(to top, #059669, #10b981);">
+            <div class="val" style="color:#10b981;">100</div>
+          </div>
+          <div class="chat-bar-label">10 users</div>
+          <div class="chat-bar-status" style="color:#10b981;">&#x2705;</div>
+        </div>
+        <div class="chat-bar-col">
+          <div class="chat-bar" style="height:25%; background:linear-gradient(to top, #059669, #10b981);">
+            <div class="val" style="color:#10b981;">250</div>
+          </div>
+          <div class="chat-bar-label">25 users</div>
+          <div class="chat-bar-status" style="color:#10b981;">&#x2705;</div>
+        </div>
+        <div class="chat-bar-col">
+          <div class="chat-bar" style="height:50%; background:linear-gradient(to top, #d97706, #f59e0b);">
+            <div class="val" style="color:#f59e0b;">500</div>
+          </div>
+          <div class="chat-bar-label">50 users</div>
+          <div class="chat-bar-status" style="color:#f59e0b;">&#x26A0;&#xFE0F;</div>
+        </div>
+        <div class="chat-bar-col">
+          <div class="chat-bar" style="height:75%; background:linear-gradient(to top, #dc2626, #f59e0b);">
+            <div class="val" style="color:#f59e0b;">1,000</div>
+          </div>
+          <div class="chat-bar-label">100 users</div>
+          <div class="chat-bar-status" style="color:#ef4444;">&#x1F534;</div>
+        </div>
+        <div class="chat-bar-col">
+          <div class="chat-bar" style="height:100%; background:linear-gradient(to top, #dc2626, #ef4444);">
+            <div class="val" style="color:#ef4444;">2,000</div>
+          </div>
+          <div class="chat-bar-label">200 users</div>
+          <div class="chat-bar-status" style="color:#ef4444;">&#x1F4A5;</div>
+        </div>
+      </div>
+      <div style="text-align:center; font-size:0.7rem; color:#64748b; margin-top:8px;">
+        Each poll = 1 serverless invocation + 1&#x2013;2 DB queries &bull; Adaptive intervals: 5s &#x2192; 10s &#x2192; 20s &#x2192; 30s
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURE LOAD PROFILES -->
+  <div class="section">
+    <div class="section-label">Load Profiles</div>
+    <div class="section-title">Resource cost per feature</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#7c2d12;">&#x1F4AC;</div>
+        <div class="feature-info">
+          <div class="feature-name">Chat (active)</div>
+          <div class="feature-detail">1&#x2013;2 queries &bull; 5&#x2013;30s polling</div>
+        </div>
+        <div class="feature-load load-critical">Critical</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#1e3a5f;">&#x1F4CA;</div>
+        <div class="feature-info">
+          <div class="feature-name">Crew Dashboard</div>
+          <div class="feature-detail">8&#x2013;10 queries per load</div>
+        </div>
+        <div class="feature-load load-high">High</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#1e3a5f;">&#x1F4C5;</div>
+        <div class="feature-info">
+          <div class="feature-name">Schedule View</div>
+          <div class="feature-detail">4&#x2013;6 queries per load</div>
+        </div>
+        <div class="feature-load load-med">Medium</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#1e3a5f;">&#x1F3E0;</div>
+        <div class="feature-info">
+          <div class="feature-name">Hub / Home</div>
+          <div class="feature-detail">4&#x2013;5 queries per load</div>
+        </div>
+        <div class="feature-load load-med">Medium</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#1e3a5f;">&#x1F514;</div>
+        <div class="feature-info">
+          <div class="feature-name">Notifications</div>
+          <div class="feature-detail">1 query &bull; 30s polling</div>
+        </div>
+        <div class="feature-load load-med">Medium</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#064e3b;">&#x1F4E6;</div>
+        <div class="feature-info">
+          <div class="feature-name">Inventory</div>
+          <div class="feature-detail">2&#x2013;4 queries per load</div>
+        </div>
+        <div class="feature-load load-low">Low</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#064e3b;">&#x1F4D6;</div>
+        <div class="feature-info">
+          <div class="feature-name">Guides</div>
+          <div class="feature-detail">2&#x2013;3 queries per load</div>
+        </div>
+        <div class="feature-load load-low">Low</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#064e3b;">&#x1F50D;</div>
+        <div class="feature-info">
+          <div class="feature-name">Search</div>
+          <div class="feature-detail">2&#x2013;3 queries per action</div>
+        </div>
+        <div class="feature-load load-low">Low</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PEAK SCENARIOS -->
+  <div class="section">
+    <div class="section-label">Stress Tests</div>
+    <div class="section-title">Peak load scenarios</div>
+    <div class="scenario-grid">
+      <div class="scenario-card ok">
+        <div class="scenario-title">&#x2615; Monday Morning Rush</div>
+        <div class="scenario-stat"><span>Users</span><span class="val">30 schedule + 10 chat</span></div>
+        <div class="scenario-stat"><span>Burst queries</span><span class="val">150</span></div>
+        <div class="scenario-stat"><span>Sustained</span><span class="val">100 req/min</span></div>
+        <div class="scenario-stat"><span>DB connections</span><span class="val">~120</span></div>
+        <div class="scenario-stat"><span>Est. ops/sec</span><span class="val">~80</span></div>
+        <div class="scenario-verdict ok">&#x2705; Handles fine</div>
+      </div>
+      <div class="scenario-card warn">
+        <div class="scenario-title">&#x1F4E3; Schedule Published</div>
+        <div class="scenario-stat"><span>Users</span><span class="val">60 concurrent check-ins</span></div>
+        <div class="scenario-stat"><span>Email cron</span><span class="val">100 emails batched</span></div>
+        <div class="scenario-stat"><span>Burst queries</span><span class="val">~300</span></div>
+        <div class="scenario-stat"><span>DB connections</span><span class="val">~270</span></div>
+        <div class="scenario-stat"><span>Est. ops/sec</span><span class="val">~350</span></div>
+        <div class="scenario-verdict warn">&#x26A0;&#xFE0F; IOPS nearing cap, brief lag</div>
+      </div>
+      <div class="scenario-card bad">
+        <div class="scenario-title">&#x1F3AA; Multi-Crew Event</div>
+        <div class="scenario-stat"><span>Users</span><span class="val">150 (3 crews &times; 50)</span></div>
+        <div class="scenario-stat"><span>In chat</span><span class="val">40 active</span></div>
+        <div class="scenario-stat"><span>Chat polls</span><span class="val">400/min</span></div>
+        <div class="scenario-stat"><span>DB connections</span><span class="val">~420</span></div>
+        <div class="scenario-stat"><span>Est. ops/sec</span><span class="val">500+ &#x1F4A5;</span></div>
+        <div class="scenario-verdict bad">&#x1F4A5; IOPS saturated, timeouts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPACITY PROJECTION -->
+  <div class="section">
+    <div class="section-label">Scaling Projection</div>
+    <div class="section-title">Concurrent user capacity by upgrade</div>
+    <div class="card">
+      <div class="projection-row">
+        <div class="projection-label">
+          Current Setup
+          <small>Flex ($8&#x2013;30/mo) &bull; HTTP polling</small>
+        </div>
+        <div class="projection-track">
+          <div class="projection-fill" style="width:22%; background:linear-gradient(90deg, #10b981, #f59e0b, #ef4444);">
+            <div class="marker"></div>
+          </div>
+        </div>
+        <div class="projection-num" style="color:#f59e0b;">~90</div>
+      </div>
+      <div class="projection-row">
+        <div class="projection-label">
+          + Atlas M10
+          <small>$57/mo &bull; 1500 conn &bull; uncapped IOPS</small>
+        </div>
+        <div class="projection-track">
+          <div class="projection-fill" style="width:45%; background:linear-gradient(90deg, #10b981 80%, #f59e0b);">
+            <div class="marker"></div>
+          </div>
+        </div>
+        <div class="projection-num" style="color:#10b981;">~225</div>
+      </div>
+      <div class="projection-row">
+        <div class="projection-label">
+          + SSE for Chat
+          <small>Dev time &bull; &#x2013;70% poll load</small>
+        </div>
+        <div class="projection-track">
+          <div class="projection-fill" style="width:65%; background:linear-gradient(90deg, #10b981 90%, #f59e0b);">
+            <div class="marker"></div>
+          </div>
+        </div>
+        <div class="projection-num" style="color:#10b981;">~375</div>
+      </div>
+      <div class="projection-row">
+        <div class="projection-label">
+          + M30 + WebSocket
+          <small>~$480/mo total</small>
+        </div>
+        <div class="projection-track">
+          <div class="projection-fill" style="width:90%; background:linear-gradient(90deg, #10b981 95%, #f59e0b);">
+            <div class="marker"></div>
+          </div>
+        </div>
+        <div class="projection-num" style="color:#10b981;">~500+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABLY IMPACT -->
+  <div class="section">
+    <div class="section-label">What If: Ably</div>
+    <div class="section-title">Impact of adding real-time messaging</div>
+    <div class="card">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <!-- Before -->
+        <div>
+          <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#ef4444; margin-bottom:12px;">Without Ably (Current)</div>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:6px; display:flex; justify-content:space-between;">
+            <span>Chat poll load</span><span style="color:#ef4444; font-weight:600;">10 req/min/user</span>
+          </div>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:6px; display:flex; justify-content:space-between;">
+            <span>50 chat users</span><span style="color:#f59e0b; font-weight:600;">500 req/min</span>
+          </div>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:6px; display:flex; justify-content:space-between;">
+            <span>DB ops from chat</span><span style="color:#ef4444; font-weight:600;">~150 ops/sec</span>
+          </div>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:6px; display:flex; justify-content:space-between;">
+            <span>Notification polling</span><span style="color:#f59e0b; font-weight:600;">2 req/min/user</span>
+          </div>
+          <div style="font-size:0.8rem; color:#94a3b8; display:flex; justify-content:space-between;">
+            <span>Serverless invocations</span><span style="color:#ef4444; font-weight:600;">High</span>
+          </div>
+        </div>
+        <!-- After -->
+        <div>
+          <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#10b981; margin-bottom:12px;">With Ably</div>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:6px; display:flex; justify-content:space-between;">
+            <span>Chat poll load</span><span style="color:#10b981; font-weight:600;">0 req/min/user</span>
+          </div>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:6px; display:flex; justify-content:space-between;">
+            <span>50 chat users</span><span style="color:#10b981; font-weight:600;">0 req/min</span>
+          </div>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:6px; display:flex; justify-content:space-between;">
+            <span>DB ops from chat</span><span style="color:#10b981; font-weight:600;">~5 ops/sec (writes only)</span>
+          </div>
+          <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:6px; display:flex; justify-content:space-between;">
+            <span>Notification polling</span><span style="color:#10b981; font-weight:600;">0 (push via Ably)</span>
+          </div>
+          <div style="font-size:0.8rem; color:#94a3b8; display:flex; justify-content:space-between;">
+            <span>Serverless invocations</span><span style="color:#10b981; font-weight:600;">&#x2013;60&#x2013;80%</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px; padding-top:16px; border-top:1px solid #1e293b;">
+        <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#a78bfa; margin-bottom:12px;">Ably Pricing Tiers</div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+          <div style="background:#0d1321; border:1px solid #1e293b; border-radius:10px; padding:14px; text-align:center;">
+            <div style="font-size:1.1rem; font-weight:800; color:#10b981;">Free</div>
+            <div style="font-size:0.7rem; color:#64748b; margin-top:4px;">6M messages/mo</div>
+            <div style="font-size:0.7rem; color:#64748b;">200 peak connections</div>
+            <div style="font-size:0.7rem; color:#94a3b8; font-weight:600; margin-top:6px;">&#x2264; 25 users</div>
+          </div>
+          <div style="background:#0d1321; border:1px solid #1e293b; border-radius:10px; padding:14px; text-align:center;">
+            <div style="font-size:1.1rem; font-weight:800; color:#3b82f6;">$25/mo</div>
+            <div style="font-size:0.7rem; color:#64748b; margin-top:4px;">10M messages/mo</div>
+            <div style="font-size:0.7rem; color:#64748b;">10K peak connections</div>
+            <div style="font-size:0.7rem; color:#94a3b8; font-weight:600; margin-top:6px;">25&#x2013;250 users</div>
+          </div>
+          <div style="background:#0d1321; border:1px solid #1e293b; border-radius:10px; padding:14px; text-align:center;">
+            <div style="font-size:1.1rem; font-weight:800; color:#a78bfa;">$50&#x2013;100</div>
+            <div style="font-size:0.7rem; color:#64748b; margin-top:4px;">50M+ messages/mo</div>
+            <div style="font-size:0.7rem; color:#64748b;">50K+ connections</div>
+            <div style="font-size:0.7rem; color:#94a3b8; font-weight:600; margin-top:6px;">250&#x2013;1000+ users</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px; padding-top:16px; border-top:1px solid #1e293b;">
+        <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#fbbf24; margin-bottom:12px;">Net Capacity Impact</div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+          <div style="background:#0d1321; border:1px solid #1e293b; border-radius:10px; padding:14px; text-align:center;">
+            <div style="font-size:0.7rem; color:#64748b;">Flex + Ably</div>
+            <div style="font-size:1.3rem; font-weight:800; color:#10b981; margin:4px 0;">~140</div>
+            <div style="font-size:0.65rem; color:#64748b;">concurrent users</div>
+            <div style="font-size:0.65rem; color:#10b981; margin-top:4px;">+55% vs current</div>
+          </div>
+          <div style="background:#0d1321; border:1px solid #1e293b; border-radius:10px; padding:14px; text-align:center;">
+            <div style="font-size:0.7rem; color:#64748b;">M10 + Ably</div>
+            <div style="font-size:1.3rem; font-weight:800; color:#10b981; margin:4px 0;">~375</div>
+            <div style="font-size:0.65rem; color:#64748b;">concurrent users</div>
+            <div style="font-size:0.65rem; color:#10b981; margin-top:4px;">+67% vs M10 alone</div>
+          </div>
+          <div style="background:#0d1321; border:1px solid #1e293b; border-radius:10px; padding:14px; text-align:center;">
+            <div style="font-size:0.7rem; color:#64748b;">M30 + Ably</div>
+            <div style="font-size:1.3rem; font-weight:800; color:#10b981; margin:4px 0;">~750+</div>
+            <div style="font-size:0.65rem; color:#64748b;">concurrent users</div>
+            <div style="font-size:0.65rem; color:#10b981; margin-top:4px;">+50% vs M30 alone</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCALING ROADMAP -->
+  <div class="section">
+    <div class="section-label">Recommendations</div>
+    <div class="section-title">Scaling roadmap</div>
+    <div class="roadmap">
+      <div class="roadmap-col">
+        <div class="roadmap-header quick">&#x26A1; Quick Wins</div>
+        <div class="roadmap-item">
+          <div class="roadmap-item-title">Upgrade to Atlas M10</div>
+          <div class="roadmap-item-desc">1,500 connections, uncapped IOPS, dedicated 2GB RAM. Single highest-impact change.</div>
+          <div class="roadmap-item-cost">~$57/mo</div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-item-title">Raise maxPoolSize to 10</div>
+          <div class="roadmap-item-desc">Fewer reconnects per instance. Only viable after M10 upgrade (needs 1,500 conn headroom).</div>
+          <div class="roadmap-item-cost">Free</div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-item-title">Aggressive Caching</div>
+          <div class="roadmap-item-desc">unstable_cache on hub, dashboard, and schedule pages. Reduces Flex IOPS consumption.</div>
+          <div class="roadmap-item-cost">Free</div>
+        </div>
+      </div>
+      <div class="roadmap-col">
+        <div class="roadmap-header mid">&#x1F527; Medium-Term</div>
+        <div class="roadmap-item">
+          <div class="roadmap-item-title">Redis Rate Limiting</div>
+          <div class="roadmap-item-desc">Upstash serverless Redis for global rate limits across all serverless instances.</div>
+          <div class="roadmap-item-cost">~$10/mo</div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-item-title">SSE for Chat</div>
+          <div class="roadmap-item-desc">Replace polling with Server-Sent Events. Cuts chat DB load 60&#x2013;80%.</div>
+          <div class="roadmap-item-cost">Dev time</div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-item-title">Set minPoolSize to 2</div>
+          <div class="roadmap-item-desc">Pre-warms connections on warm instances. Reduces first-query cold start.</div>
+          <div class="roadmap-item-cost">Free</div>
+        </div>
+      </div>
+      <div class="roadmap-col">
+        <div class="roadmap-header long">&#x1F680; Long-Term</div>
+        <div class="roadmap-item">
+          <div class="roadmap-item-title">WebSocket Gateway</div>
+          <div class="roadmap-item-desc">Ably or Pusher for real-time chat + notifications. Eliminates all polling overhead.</div>
+          <div class="roadmap-item-cost">~$25/mo</div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-item-title">Atlas M30 + Read Replica</div>
+          <div class="roadmap-item-desc">Dedicated cluster, analytics on secondary, auto-scaling storage.</div>
+          <div class="roadmap-item-cost">~$400/mo</div>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-item-title">Dedicated Cron Worker</div>
+          <div class="roadmap-item-desc">Move cron jobs to Railway/Fly.io. Frees Vercel for user traffic.</div>
+          <div class="roadmap-item-cost">~$5&#x2013;15/mo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING BY SCALE -->
+  <div class="section">
+    <div class="section-label">Cost Scaling</div>
+    <div class="section-title">Monthly cost as you grow</div>
+    <div class="cost-grid-4">
+      <!-- 25 users -->
+      <div class="cost-card">
+        <div class="cost-header" style="background:#064e3b; color:#6ee7b7;">25 Users</div>
+        <div class="cost-row"><span>Vercel Pro</span><span class="amt">$20</span></div>
+        <div class="cost-row"><span>Atlas Flex</span><span class="amt">$8&#x2013;15</span></div>
+        <div class="cost-row"><span>Cloudflare R2</span><span class="amt">~$1</span></div>
+        <div class="cost-row"><span>Resend</span><span class="amt free">Free</span></div>
+        <div class="cost-row"><span>Sentry</span><span class="amt free">Free</span></div>
+        <div class="cost-row"><span>Stripe</span><span class="amt">Usage</span></div>
+        <div class="cost-row total"><span>Total</span><span class="amt">~$29&#x2013;36</span></div>
+        <div class="cost-per-user">~$1.20&#x2013;1.44/user</div>
+      </div>
+      <!-- 50 users -->
+      <div class="cost-card">
+        <div class="cost-header" style="background:#064e3b; color:#6ee7b7;">50 Users</div>
+        <div class="cost-row"><span>Vercel Pro</span><span class="amt">$20</span></div>
+        <div class="cost-row"><span>Atlas Flex</span><span class="amt">$20&#x2013;30</span></div>
+        <div class="cost-row"><span>Cloudflare R2</span><span class="amt">~$3</span></div>
+        <div class="cost-row"><span>Resend</span><span class="amt">~$0&#x2013;20</span></div>
+        <div class="cost-row"><span>Sentry</span><span class="amt free">Free</span></div>
+        <div class="cost-row"><span>Stripe</span><span class="amt">Usage</span></div>
+        <div class="cost-row total"><span>Total</span><span class="amt">~$43&#x2013;73</span></div>
+        <div class="cost-per-user">~$0.86&#x2013;1.46/user</div>
+      </div>
+      <!-- 100 users -->
+      <div class="cost-card">
+        <div class="cost-header" style="background:#1e3a5f; color:#93c5fd;">100 Users</div>
+        <div class="cost-row"><span>Vercel Pro</span><span class="amt">$20</span></div>
+        <div class="cost-row"><span>Atlas M10</span><span class="amt">$57</span></div>
+        <div class="cost-row"><span>Cloudflare R2</span><span class="amt">~$5</span></div>
+        <div class="cost-row"><span>Resend</span><span class="amt">~$20</span></div>
+        <div class="cost-row"><span>Sentry</span><span class="amt free">Free</span></div>
+        <div class="cost-row"><span>Stripe</span><span class="amt">Usage</span></div>
+        <div class="cost-row total"><span>Total</span><span class="amt">~$102</span></div>
+        <div class="cost-per-user">~$1.02/user</div>
+      </div>
+      <!-- 250 users -->
+      <div class="cost-card">
+        <div class="cost-header" style="background:#3b0764; color:#d8b4fe;">250 Users</div>
+        <div class="cost-row"><span>Vercel Pro</span><span class="amt">$20</span></div>
+        <div class="cost-row"><span>Atlas M10</span><span class="amt">$57</span></div>
+        <div class="cost-row"><span>Upstash Redis</span><span class="amt">$10</span></div>
+        <div class="cost-row"><span>Ably/Pusher</span><span class="amt">$25</span></div>
+        <div class="cost-row"><span>R2 + Email</span><span class="amt">~$30</span></div>
+        <div class="cost-row"><span>Stripe</span><span class="amt">Usage</span></div>
+        <div class="cost-row total"><span>Total</span><span class="amt">~$142</span></div>
+        <div class="cost-per-user">~$0.57/user</div>
+      </div>
+    </div>
+
+    <!-- Extended tiers -->
+    <div class="cost-grid" style="margin-top:12px;">
+      <div class="cost-card">
+        <div class="cost-header" style="background:#450a0a; color:#fca5a5;">500 Users</div>
+        <div class="cost-row"><span>Vercel Pro</span><span class="amt">$20</span></div>
+        <div class="cost-row"><span>Atlas M30</span><span class="amt">$400</span></div>
+        <div class="cost-row"><span>Upstash Redis</span><span class="amt">$10</span></div>
+        <div class="cost-row"><span>Ably/Pusher</span><span class="amt">$50</span></div>
+        <div class="cost-row"><span>R2 + Email</span><span class="amt">~$40</span></div>
+        <div class="cost-row"><span>Cron Worker</span><span class="amt">~$10</span></div>
+        <div class="cost-row total"><span>Total</span><span class="amt">~$530</span></div>
+        <div class="cost-per-user">~$1.06/user</div>
+      </div>
+      <div class="cost-card">
+        <div class="cost-header" style="background:#1e293b; color:#94a3b8;">1000+ Users</div>
+        <div class="cost-row"><span>Vercel Pro</span><span class="amt">$20</span></div>
+        <div class="cost-row"><span>Atlas M50/M60</span><span class="amt">$700&#x2013;1200</span></div>
+        <div class="cost-row"><span>Upstash Redis Pro</span><span class="amt">$50</span></div>
+        <div class="cost-row"><span>Ably/Pusher</span><span class="amt">$100</span></div>
+        <div class="cost-row"><span>R2 + Email</span><span class="amt">~$60</span></div>
+        <div class="cost-row"><span>Cron Worker</span><span class="amt">~$15</span></div>
+        <div class="cost-row total"><span>Total</span><span class="amt">~$945&#x2013;1,445</span></div>
+        <div class="cost-per-user">~$0.95&#x2013;1.45/user</div>
+      </div>
+    </div>
+
+    <!-- 10K tier -->
+    <div style="margin-top:12px;">
+      <div class="cost-card">
+        <div class="cost-header" style="background:#0c0a09; color:#78716c; border-bottom:1px solid #1e293b;">10,000+ Users (Enterprise)</div>
+        <div class="cost-row"><span>Vercel Enterprise</span><span class="amt">$500+</span></div>
+        <div class="cost-row"><span>Atlas M80 / Dedicated</span><span class="amt">$3,000&#x2013;5,000</span></div>
+        <div class="cost-row"><span>Redis (Upstash Pro / ElastiCache)</span><span class="amt">$100&#x2013;200</span></div>
+        <div class="cost-row"><span>Ably Enterprise</span><span class="amt">$300&#x2013;500</span></div>
+        <div class="cost-row"><span>Cloudflare R2</span><span class="amt">~$50&#x2013;100</span></div>
+        <div class="cost-row"><span>Resend (email)</span><span class="amt">~$100&#x2013;200</span></div>
+        <div class="cost-row"><span>Sentry (Team)</span><span class="amt">$26</span></div>
+        <div class="cost-row"><span>Cron Worker (dedicated)</span><span class="amt">~$25&#x2013;50</span></div>
+        <div class="cost-row total"><span>Total</span><span class="amt">~$4,100&#x2013;6,575</span></div>
+        <div class="cost-per-user">~$0.41&#x2013;0.66/user</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="section">
+    <div class="summary-callout">
+      <h3>Bottom Line</h3>
+      <p>
+        With Atlas Flex, the app comfortably supports
+        <strong>2&#x2013;3 crews of 30&#x2013;50 members each</strong> (~$30&#x2013;73/mo).
+        The Flex tier's 500-connection limit and 500 ops/sec IOPS cap are the primary constraints.
+        Upgrading to Atlas M10 (<strong>~$57/mo</strong>) is the single highest-impact change &mdash;
+        tripling connection capacity to 1,500 and removing the IOPS ceiling,
+        enabling <strong>~225 concurrent users</strong>.
+      </p>
+    </div>
+  </div>
+
+  <div class="footer">
+    Generated from static analysis of infrastructure configuration, connection pool settings, rate limiting rules, and polling intervals.<br>
+    Actual performance depends on query complexity, data volume, and real-world usage patterns.<br>
+    61 collections &bull; ~130 API routes &bull; ~125 custom endpoints &bull; 6 cron jobs
+  </div>
+
+</div>
+</body>
+</html>

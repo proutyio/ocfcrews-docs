@@ -6,8 +6,8 @@ import {createRequire} from 'module';
 const require = createRequire(import.meta.url);
 const {version: appVersion} = require('./package.json');
 
-const baseUrl = process.env.DOCS_BASE_URL ?? '/docs/';
-const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'https://ocfcrews.org';
+const baseUrl = '/ocfcrews-docs/';
+const siteUrl = 'https://proutyio.github.io';
 
 const config: Config = {
   title: 'OCFCrews Documentation',

@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCF Crews — Architecture Infographic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --emerald-400: #34d399;
+    --emerald-500: #10b981;
+    --emerald-300: #6ee7b7;
+
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --slate-950: #020617;
+
+    --sky: #0ea5e9;
+    --orange: #f97316;
+    --purple: #8b5cf6;
+    --amber: #f59e0b;
+    --pink: #ec4899;
+    --teal: #14b8a6;
+    --red: #ef4444;
+    --blue: #3b82f6;
+
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--slate-950);
+    color: var(--slate-200);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+  }
+
+  .page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 80px 20px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.25);
+    color: var(--emerald-400);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 18px;
+    border-radius: 100px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(42px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #fff 0%, var(--emerald-300) 50%, var(--emerald-500) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+  }
+  .hero p {
+    font-size: 18px;
+    color: var(--slate-400);
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  /* ── TABLE OF CONTENTS ── */
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 0 48px;
+  }
+  .toc a {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate-400);
+    background: var(--slate-900);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 7px 16px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .toc a:hover {
+    color: var(--emerald-400);
+    border-color: rgba(16,185,129,0.3);
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 48px 0 56px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .stat {
+    background: var(--slate-900);
+    padding: 32px 20px;
+    text-align: center;
+  }
+  .stat-number {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--emerald-400);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--slate-400);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  /* ── SECTION TITLES ── */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 72px 0 32px;
+    flex-wrap: wrap;
+  }
+  .section-title .icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .section-title h2 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #fff;
+  }
+  .section-title .subtitle {
+    font-size: 15px;
+    color: var(--slate-500);
+    font-weight: 400;
+    width: 100%;
+    margin-top: -4px;
+    padding-left: 64px;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    gap: 20px;
+  }
+  .card-grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+  .card-grid.cols-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+  .card {
+    background: var(--slate-900);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 32px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .card-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .card p, .card li {
+    font-size: 15px;
+    color: var(--slate-300);
+    line-height: 1.8;
+  }
+  .card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card li::before {
+    content: '  ';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--emerald-500);
+    margin-right: 12px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+  .card li strong {
+    color: #fff;
+  }
+  .card code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: rgba(255,255,255,0.06);
+    padding: 2px 7px;
+    border-radius: 5px;
+    color: var(--emerald-400);
+  }
+
+  /* ── COLOR ACCENTS ── */
+  .accent-emerald .card-icon, .accent-emerald .icon { background: rgba(16,185,129,0.12); color: var(--emerald-400); }
+  .accent-sky .card-icon, .accent-sky .icon { background: rgba(14,165,233,0.12); color: var(--sky); }
+  .accent-orange .card-icon, .accent-orange .icon { background: rgba(249,115,22,0.12); color: var(--orange); }
+  .accent-purple .card-icon, .accent-purple .icon { background: rgba(139,92,246,0.12); color: var(--purple); }
+  .accent-amber .card-icon, .accent-amber .icon { background: rgba(245,158,11,0.12); color: var(--amber); }
+  .accent-pink .card-icon, .accent-pink .icon { background: rgba(236,72,153,0.12); color: var(--pink); }
+  .accent-teal .card-icon, .accent-teal .icon { background: rgba(20,184,166,0.12); color: var(--teal); }
+  .accent-red .card-icon, .accent-red .icon { background: rgba(239,68,68,0.12); color: var(--red); }
+  .accent-blue .card-icon, .accent-blue .icon { background: rgba(59,130,246,0.12); color: var(--blue); }
+
+  /* ── TECH STACK GRID ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 12px;
+  }
+  .tech-item {
+    background: var(--slate-900);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    padding: 20px 16px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .tech-item:hover { border-color: rgba(255,255,255,0.12); }
+  .tech-item .tech-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .tech-item .tech-desc {
+    font-size: 12px;
+    color: var(--slate-500);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 500;
+  }
+  .tech-item .tech-emoji {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  /* ── ARCHITECTURE DIAGRAM ── */
+  .arch-diagram {
+    background: var(--slate-900);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 48px;
+    margin: 32px 0;
+    overflow-x: auto;
+  }
+  .arch-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 900px;
+  }
+  .arch-layer {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .arch-label {
+    width: 130px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    padding: 18px 10px;
+    text-align: center;
+  }
+  .arch-content {
+    flex: 1;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .arch-box {
+    flex: 1;
+    min-width: 110px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .arch-box small {
+    font-size: 11px;
+    font-weight: 400;
+    opacity: 0.7;
+    display: block;
+  }
+
+  .layer-client .arch-label { background: rgba(14,165,233,0.15); color: var(--sky); }
+  .layer-client .arch-box { background: rgba(14,165,233,0.06); color: var(--sky); border: 1px solid rgba(14,165,233,0.15); }
+  .layer-api .arch-label { background: rgba(139,92,246,0.15); color: var(--purple); }
+  .layer-api .arch-box { background: rgba(139,92,246,0.06); color: var(--purple); border: 1px solid rgba(139,92,246,0.15); }
+  .layer-business .arch-label { background: rgba(16,185,129,0.15); color: var(--emerald-400); }
+  .layer-business .arch-box { background: rgba(16,185,129,0.06); color: var(--emerald-400); border: 1px solid rgba(16,185,129,0.15); }
+  .layer-data .arch-label { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .layer-data .arch-box { background: rgba(245,158,11,0.06); color: var(--amber); border: 1px solid rgba(245,158,11,0.15); }
+  .layer-infra .arch-label { background: rgba(239,68,68,0.15); color: var(--red); }
+  .layer-infra .arch-box { background: rgba(239,68,68,0.06); color: var(--red); border: 1px solid rgba(239,68,68,0.15); }
+
+  .arch-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+    min-width: 900px;
+  }
+  .arch-arrow-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--slate-600);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .arch-arrow-line::before,
+  .arch-arrow-line::after {
+    content: '';
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--slate-700), transparent);
+  }
+  .arch-arrow svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--slate-600);
+  }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 24px 0 8px;
+  }
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 100px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--slate-200);
+  }
+  .flow-arrow {
+    color: var(--slate-600);
+    font-size: 16px;
+    flex-shrink: 0;
+    font-weight: 300;
+  }
+  .flow-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    width: 90px;
+    flex-shrink: 0;
+  }
+
+  /* ── DECISION POINTS ── */
+  .decision-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 20px;
+  }
+  .decision-card {
+    background: var(--slate-900);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .decision-card::before {
+    content: '?';
+    position: absolute;
+    top: -15px; right: 8px;
+    font-size: 110px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.015);
+    pointer-events: none;
+    line-height: 1;
+  }
+  .decision-q {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--emerald-400);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .decision-a {
+    font-size: 15px;
+    color: var(--slate-300);
+    line-height: 1.8;
+  }
+  .decision-a strong {
+    color: #fff;
+    font-weight: 600;
+  }
+  .decision-a code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: rgba(255,255,255,0.06);
+    padding: 2px 7px;
+    border-radius: 5px;
+    color: var(--emerald-400);
+  }
+  .decision-tag {
+    display: inline-block;
+    background: rgba(16,185,129,0.1);
+    color: var(--emerald-400);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 16px;
+  }
+
+  /* ── COLLECTION MAP ── */
+  .collection-cluster {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .cluster {
+    background: var(--slate-900);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .cluster-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cluster-count {
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.06);
+    padding: 2px 10px;
+    border-radius: 100px;
+    color: var(--slate-400);
+  }
+  .cluster-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .cluster-item {
+    font-size: 13px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    background: rgba(255,255,255,0.04);
+    color: var(--slate-300);
+    border: 1px solid rgba(255,255,255,0.06);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── SECURITY LAYERS ── */
+  .security-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 24px 0;
+  }
+  .security-layer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 28px;
+    border-radius: 10px;
+    font-size: 15px;
+  }
+  .security-layer:nth-child(1) { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.12); }
+  .security-layer:nth-child(2) { background: rgba(249,115,22,0.06); border: 1px solid rgba(249,115,22,0.12); }
+  .security-layer:nth-child(3) { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.12); }
+  .security-layer:nth-child(4) { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.12); }
+  .security-layer:nth-child(5) { background: rgba(14,165,233,0.06); border: 1px solid rgba(14,165,233,0.12); }
+  .security-layer:nth-child(6) { background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.12); }
+  .security-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    background: rgba(255,255,255,0.08);
+    flex-shrink: 0;
+  }
+  .security-name {
+    font-weight: 700;
+    min-width: 180px;
+    font-size: 15px;
+  }
+  .security-desc {
+    color: var(--slate-400);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── CODE SNIPPETS ── */
+  .code-block {
+    background: var(--slate-950);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    padding: 28px 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 2;
+    overflow-x: auto;
+    margin: 16px 0;
+    color: var(--slate-300);
+  }
+  .code-comment { color: var(--slate-600); }
+  .code-func { color: var(--sky); }
+  .code-type { color: var(--amber); }
+  .code-string { color: var(--emerald-400); }
+
+  /* ── PATTERNS ── */
+  .pattern-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+  }
+  .pattern {
+    display: flex;
+    gap: 16px;
+    padding: 22px 24px;
+    background: var(--slate-900);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    align-items: flex-start;
+  }
+  .pattern-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+  }
+  .pattern-text h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #fff;
+  }
+  .pattern-text p {
+    font-size: 14px;
+    color: var(--slate-400);
+    line-height: 1.7;
+  }
+  .pattern-text code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.06);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--emerald-400);
+  }
+
+  /* ── NAV COLOR MAP ── */
+  .nav-map {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin: 24px 0;
+  }
+  .nav-tab {
+    padding: 24px 12px;
+    border-radius: 14px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .nav-tab small {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.6;
+    margin-top: 6px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    margin: 56px 0;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 48px 20px 20px;
+    color: var(--slate-600);
+    font-size: 14px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .page { padding: 20px 16px 40px; }
+    .hero { padding: 40px 12px 32px; }
+    .card-grid.cols-2, .card-grid.cols-3 {
+      grid-template-columns: 1fr;
+    }
+    .collection-cluster { grid-template-columns: 1fr; }
+    .nav-map { grid-template-columns: repeat(3, 1fr); }
+    .decision-grid { grid-template-columns: 1fr; }
+    .security-layer { flex-wrap: wrap; }
+    .security-name { min-width: auto; }
+    .section-title .subtitle { padding-left: 0; }
+    .arch-diagram { padding: 24px 20px; }
+    .pattern-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-badge">System Architecture</div>
+    <h1>OCF Crews</h1>
+    <p>A full-stack crew scheduling, communication, and e-commerce platform built on Next.js 15 + Payload CMS with real-time chat, offline-first PWA, and multi-crew isolation.</p>
+  </header>
+
+  <!-- TABLE OF CONTENTS -->
+  <nav class="toc">
+    <a href="#architecture">Architecture</a>
+    <a href="#tech-stack">Tech Stack</a>
+    <a href="#collections">Collections</a>
+    <a href="#auth">Authentication</a>
+    <a href="#security">Security</a>
+    <a href="#decisions">Decisions</a>
+    <a href="#patterns">Patterns</a>
+    <a href="#chat">Chat</a>
+    <a href="#pwa">PWA</a>
+    <a href="#multi-crew">Multi-Crew</a>
+    <a href="#hooks">Hooks</a>
+    <a href="#cron">Cron &amp; Integrations</a>
+    <a href="#nav">Navigation</a>
+    <a href="#structure">Structure</a>
+  </nav>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-number">52</div>
+      <div class="stat-label">Collections</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">40+</div>
+      <div class="stat-label">API Routes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">72</div>
+      <div class="stat-label">Components</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">47</div>
+      <div class="stat-label">Utilities</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">5</div>
+      <div class="stat-label">Auth Methods</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Integrations</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">5</div>
+      <div class="stat-label">Cron Jobs</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ ARCHITECTURE LAYERS ═══════════ -->
+  <div class="section-title accent-emerald" id="architecture">
+    <div class="icon">&#x1f3d7;</div>
+    <h2>System Architecture</h2>
+    <span class="subtitle">Layered request flow from client to infrastructure</span>
+  </div>
+
+  <div class="arch-diagram">
+    <div class="arch-layers">
+      <div class="arch-layer layer-client">
+        <div class="arch-label">CLIENT</div>
+        <div class="arch-content">
+          <div class="arch-box">React 19 SPA<small>App Router</small></div>
+          <div class="arch-box">Service Worker<small>Serwist PWA</small></div>
+          <div class="arch-box">IndexedDB<small>Offline Queue</small></div>
+          <div class="arch-box">Push API<small>Web Push</small></div>
+          <div class="arch-box">WebAuthn<small>Passkeys</small></div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><div class="arch-arrow-line"><svg viewBox="0 0 24 24"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></div></div>
+
+      <div class="arch-layer layer-api">
+        <div class="arch-label">EDGE</div>
+        <div class="arch-content">
+          <div class="arch-box">Next.js Middleware<small>Auth Guard</small></div>
+          <div class="arch-box">CSRF Check<small>Origin Validation</small></div>
+          <div class="arch-box">Rate Limiter<small>In-Memory Store</small></div>
+          <div class="arch-box">Turnstile<small>Bot Protection</small></div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><div class="arch-arrow-line"><svg viewBox="0 0 24 24"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></div></div>
+
+      <div class="arch-layer layer-business">
+        <div class="arch-label">BUSINESS</div>
+        <div class="arch-content">
+          <div class="arch-box">Payload CMS<small>52 Collections</small></div>
+          <div class="arch-box">Access Control<small>Row + Field Level</small></div>
+          <div class="arch-box">Hooks Pipeline<small>Before / After</small></div>
+          <div class="arch-box">API Routes<small>40+ Endpoints</small></div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><div class="arch-arrow-line"><svg viewBox="0 0 24 24"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></div></div>
+
+      <div class="arch-layer layer-data">
+        <div class="arch-label">DATA</div>
+        <div class="arch-content">
+          <div class="arch-box">MongoDB Atlas<small>M0 Cluster</small></div>
+          <div class="arch-box">Compound Indexes<small>5 Critical</small></div>
+          <div class="arch-box">AES-256-GCM<small>At-Rest Encryption</small></div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><div class="arch-arrow-line"><svg viewBox="0 0 24 24"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></div></div>
+
+      <div class="arch-layer layer-infra">
+        <div class="arch-label">INFRA</div>
+        <div class="arch-content">
+          <div class="arch-box">Vercel<small>Hosting + Cron</small></div>
+          <div class="arch-box">Cloudflare R2<small>Object Storage</small></div>
+          <div class="arch-box">Resend<small>Email SMTP</small></div>
+          <div class="arch-box">Stripe<small>Payments</small></div>
+          <div class="arch-box">Twilio<small>SMS</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ TECH STACK ═══════════ -->
+  <div class="section-title accent-sky" id="tech-stack">
+    <div class="icon">&#x2699;</div>
+    <h2>Tech Stack</h2>
+  </div>
+
+  <div class="tech-grid">
+    <div class="tech-item"><span class="tech-emoji">&#x25B2;</span><div class="tech-name">Next.js 15</div><div class="tech-desc">App Router + SSR</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x269B;</span><div class="tech-name">React 19</div><div class="tech-desc">UI Framework</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F4E6;</span><div class="tech-name">Payload 3</div><div class="tech-desc">Headless CMS</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F343;</span><div class="tech-name">MongoDB</div><div class="tech-desc">Atlas Database</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F3A8;</span><div class="tech-name">Tailwind CSS</div><div class="tech-desc">Utility Styling</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F4B3;</span><div class="tech-name">Stripe</div><div class="tech-desc">Payments + Connect</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x2601;</span><div class="tech-name">Cloudflare R2</div><div class="tech-desc">S3 Storage</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x2709;</span><div class="tech-name">Resend</div><div class="tech-desc">Email Service</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F4F1;</span><div class="tech-name">Twilio</div><div class="tech-desc">SMS Gateway</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F527;</span><div class="tech-name">Serwist</div><div class="tech-desc">PWA + SW</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F4DD;</span><div class="tech-name">Lexical</div><div class="tech-desc">Rich Text Editor</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F4CA;</span><div class="tech-name">Recharts</div><div class="tech-desc">Data Viz</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F512;</span><div class="tech-name">WebAuthn</div><div class="tech-desc">Passkeys</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F9EA;</span><div class="tech-name">Vitest</div><div class="tech-desc">Unit Testing</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F3AD;</span><div class="tech-name">Playwright</div><div class="tech-desc">E2E Testing</div></div>
+    <div class="tech-item"><span class="tech-emoji">&#x1F4E6;</span><div class="tech-name">pnpm</div><div class="tech-desc">Package Manager</div></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ COLLECTION MAP ═══════════ -->
+  <div class="section-title accent-amber" id="collections">
+    <div class="icon">&#x1F5C4;</div>
+    <h2>Collection Map</h2>
+    <span class="subtitle">52 Payload CMS collections organized by domain</span>
+  </div>
+
+  <div class="collection-cluster">
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--emerald-400)">&#x1F465; Core <span class="cluster-count">4</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">Users</span>
+        <span class="cluster-item">Crews</span>
+        <span class="cluster-item">CrewMemberships</span>
+        <span class="cluster-item">Passkeys</span>
+      </div>
+    </div>
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--sky)">&#x1F4C5; Scheduling <span class="cluster-count">8</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">Schedules</span>
+        <span class="cluster-item">SchedulePositions</span>
+        <span class="cluster-item">ScheduleTemplates</span>
+        <span class="cluster-item">ScheduleWeeks</span>
+        <span class="cluster-item">Availability</span>
+        <span class="cluster-item">ShiftComments</span>
+        <span class="cluster-item">ShiftSwaps</span>
+        <span class="cluster-item">ShiftWaitlist</span>
+      </div>
+    </div>
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--orange)">&#x1F4AC; Chat <span class="cluster-count">4</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">ChatChannels</span>
+        <span class="cluster-item">ChatMessages</span>
+        <span class="cluster-item">ChatMedia</span>
+        <span class="cluster-item">ChatReadState</span>
+      </div>
+    </div>
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--teal)">&#x1F4DA; Guides <span class="cluster-count">10</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">CrewGuides</span>
+        <span class="cluster-item">GuideCategories</span>
+        <span class="cluster-item">GuideComments</span>
+        <span class="cluster-item">GuideMedia</span>
+        <span class="cluster-item">GuideReadReceipts</span>
+        <span class="cluster-item">GuideAssignments</span>
+        <span class="cluster-item">GuideBookmarks</span>
+        <span class="cluster-item">GuideTemplates</span>
+        <span class="cluster-item">GuideTags</span>
+        <span class="cluster-item">GuideRatings</span>
+      </div>
+    </div>
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--amber)">&#x1F4E6; Inventory <span class="cluster-count">6</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">InventoryItems</span>
+        <span class="cluster-item">InventoryCategories</span>
+        <span class="cluster-item">InventorySubCategories</span>
+        <span class="cluster-item">InventoryTransactions</span>
+        <span class="cluster-item">InventoryMedia</span>
+        <span class="cluster-item">StockNotifications</span>
+      </div>
+    </div>
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--pink)">&#x1F373; Recipes <span class="cluster-count">4</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">Recipes</span>
+        <span class="cluster-item">RecipeFavorites</span>
+        <span class="cluster-item">RecipeSubGroups</span>
+        <span class="cluster-item">RecipeTags</span>
+      </div>
+    </div>
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--purple)">&#x1F6D2; E-Commerce <span class="cluster-count">4</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">Products</span>
+        <span class="cluster-item">Orders</span>
+        <span class="cluster-item">DiscountCodes</span>
+        <span class="cluster-item">Reviews</span>
+      </div>
+    </div>
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--blue)">&#x1F3C6; Events <span class="cluster-count">3</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">CrewEvents</span>
+        <span class="cluster-item">EventPeriods</span>
+        <span class="cluster-item">EventRsvps</span>
+      </div>
+    </div>
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--red)">&#x1F4E8; Comms <span class="cluster-count">5</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">Emails</span>
+        <span class="cluster-item">EmailTemplates</span>
+        <span class="cluster-item">ScheduledEmails</span>
+        <span class="cluster-item">Notifications</span>
+        <span class="cluster-item">PushSubscriptions</span>
+      </div>
+    </div>
+    <div class="cluster">
+      <div class="cluster-title" style="color:var(--slate-400)">&#x1F4CA; Analytics <span class="cluster-count">4+</span></div>
+      <div class="cluster-items">
+        <span class="cluster-item">PageViews</span>
+        <span class="cluster-item">PageViewsDaily</span>
+        <span class="cluster-item">AuditLogs</span>
+        <span class="cluster-item">Issues</span>
+        <span class="cluster-item">AnnouncementTracking</span>
+        <span class="cluster-item">MealLogs</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ AUTH FLOW ═══════════ -->
+  <div class="section-title accent-purple" id="auth">
+    <div class="icon">&#x1F510;</div>
+    <h2>Authentication Flow</h2>
+    <span class="subtitle">Five auth methods with layered security</span>
+  </div>
+
+  <div class="card-grid cols-3">
+    <div class="card accent-purple">
+      <div class="card-header">
+        <div class="card-icon">&#x1F511;</div>
+        <h3>Email + Password</h3>
+      </div>
+      <ul>
+        <li>Payload built-in auth</li>
+        <li>10 attempts / 15-min lockout</li>
+        <li>Email verification required</li>
+        <li>Cookie-based sessions (14 days)</li>
+      </ul>
+    </div>
+    <div class="card accent-red">
+      <div class="card-header">
+        <div class="card-icon">&#x1F4F2;</div>
+        <h3>Two-Factor (TOTP)</h3>
+      </div>
+      <ul>
+        <li>AES-256-GCM encrypted secrets</li>
+        <li>HKDF key from PAYLOAD_SECRET</li>
+        <li>SHA-256 hashed backup codes</li>
+        <li>Backward-compatible w/ legacy</li>
+      </ul>
+    </div>
+    <div class="card accent-sky">
+      <div class="card-header">
+        <div class="card-icon">&#x1F91A;</div>
+        <h3>Passkeys (WebAuthn)</h3>
+      </div>
+      <ul>
+        <li>FIDO2 / biometric auth</li>
+        <li>Register + authenticate flows</li>
+        <li>Passkeys collection for storage</li>
+        <li>Phishing-resistant by design</li>
+      </ul>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-header">
+        <div class="card-icon">&#x2728;</div>
+        <h3>Magic Links</h3>
+      </div>
+      <ul>
+        <li>JWT-based tokens</li>
+        <li>Send &rarr; click &rarr; verify</li>
+        <li>Passwordless login option</li>
+      </ul>
+    </div>
+    <div class="card accent-amber">
+      <div class="card-header">
+        <div class="card-icon">&#x1F6E1;</div>
+        <h3>Role System (Dual)</h3>
+      </div>
+      <ul>
+        <li><strong>user.roles[]</strong> &mdash; admin, editor, viewer, crew_coordinator, shop_admin</li>
+        <li><strong>user.crewRole</strong> &mdash; coordinator, member</li>
+        <li>Always use <code>checkRole()</code></li>
+      </ul>
+    </div>
+    <div class="card accent-emerald">
+      <div class="card-header">
+        <div class="card-icon">&#x1F6A7;</div>
+        <h3>Middleware Guard</h3>
+      </div>
+      <ul>
+        <li>Checks <code>payload-token</code> cookie</li>
+        <li>Protects: /account, /chat, /crew, /schedule, /inventory, /shop</li>
+        <li>Redirects to /login</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ SECURITY ═══════════ -->
+  <div class="section-title accent-red" id="security">
+    <div class="icon">&#x1F6E1;</div>
+    <h2>Security Layers</h2>
+    <span class="subtitle">Defense in depth from edge to data</span>
+  </div>
+
+  <div class="security-stack">
+    <div class="security-layer">
+      <div class="security-num" style="color:var(--red)">1</div>
+      <div class="security-name" style="color:var(--red)">Turnstile CAPTCHA</div>
+      <div class="security-desc">Cloudflare bot protection on account creation &mdash; blocks automated signups</div>
+    </div>
+    <div class="security-layer">
+      <div class="security-num" style="color:var(--orange)">2</div>
+      <div class="security-name" style="color:var(--orange)">Rate Limiting</div>
+      <div class="security-desc">In-memory rate limiter on every API route &mdash; prevents brute-force and abuse</div>
+    </div>
+    <div class="security-layer">
+      <div class="security-num" style="color:var(--amber)">3</div>
+      <div class="security-name" style="color:var(--amber)">CSRF Protection</div>
+      <div class="security-desc">Origin header validation on all mutations &mdash; blocks cross-site request forgery</div>
+    </div>
+    <div class="security-layer">
+      <div class="security-num" style="color:var(--emerald-400)">4</div>
+      <div class="security-name" style="color:var(--emerald-400)">Access Control</div>
+      <div class="security-desc">Row-level + field-level Payload access functions &mdash; crew isolation via where clauses</div>
+    </div>
+    <div class="security-layer">
+      <div class="security-num" style="color:var(--sky)">5</div>
+      <div class="security-name" style="color:var(--sky)">Content Security</div>
+      <div class="security-desc">CSP headers in vercel.json &mdash; 20 MB file upload limits &mdash; input sanitization (XSS)</div>
+    </div>
+    <div class="security-layer">
+      <div class="security-num" style="color:var(--purple)">6</div>
+      <div class="security-name" style="color:var(--purple)">Encryption at Rest</div>
+      <div class="security-desc">AES-256-GCM for TOTP secrets &mdash; SHA-256 for backup codes &mdash; HKDF key derivation</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ DECISIONS ═══════════ -->
+  <div class="section-title accent-emerald" id="decisions">
+    <div class="icon">&#x1F914;</div>
+    <h2>Architecture Decisions</h2>
+    <span class="subtitle">Why things work the way they do</span>
+  </div>
+
+  <div class="decision-grid">
+    <div class="decision-card">
+      <div class="decision-q">Why Payload CMS over a custom backend?</div>
+      <div class="decision-a">Payload provides <strong>auto-generated admin UI</strong>, built-in auth, file uploads, hooks, and access control out of the box. With 52 collections, hand-rolling CRUD would be unmanageable. Payload's hook system enables complex business logic (bidirectional sync, notifications) without a separate service layer.</div>
+      <div class="decision-tag">Productivity</div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-q">Why MongoDB over PostgreSQL?</div>
+      <div class="decision-a">The data model is <strong>document-oriented</strong> &mdash; crews, schedules, and chat messages are naturally nested. MongoDB's flexible schema supports rapid iteration on 52+ collections without migration overhead. Atlas M0 (free tier) keeps costs at zero during scaling.</div>
+      <div class="decision-tag">Schema Flexibility</div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-q">Why a dual role system?</div>
+      <div class="decision-a"><strong>user.roles[]</strong> = global permissions (admin, editor). <strong>user.crewRole</strong> = crew-scoped role. This separation allows a user to be a coordinator of one crew but a regular member globally. <code>checkRole()</code> unifies the check. CrewMemberships is the source of truth; <code>crewRole</code> is a computed convenience field.</div>
+      <div class="decision-tag">Multi-Tenancy</div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-q">Why polling instead of WebSockets for chat?</div>
+      <div class="decision-a">Vercel's serverless architecture <strong>doesn't support persistent WebSocket connections</strong>. Long polling via <code>/api/chat/poll</code> provides near-real-time updates within serverless constraints. The service worker's StaleWhileRevalidate strategy ensures snappy perceived performance.</div>
+      <div class="decision-tag">Infrastructure Fit</div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-q">Why IndexedDB for offline mutations?</div>
+      <div class="decision-a">Users often operate in <strong>low-connectivity environments</strong> (kitchens, warehouses). The offline queue stores up to 100 mutations in IndexedDB, replays them with exponential backoff when connectivity returns. This makes schedule sign-ups and inventory updates resilient to network drops.</div>
+      <div class="decision-tag">Reliability</div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-q">Why Stripe Connect for crew payouts?</div>
+      <div class="decision-a">Each crew operates semi-independently. Stripe Connect enables <strong>automatic fund splitting</strong> &mdash; when an order contains items from multiple crews, transfers are routed directly to each crew's connected account. Idempotency guards prevent double-transfers; refunds automatically reverse transfers.</div>
+      <div class="decision-tag">Financial Isolation</div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-q">Why AES-256-GCM for TOTP secrets?</div>
+      <div class="decision-a">TOTP secrets must be <strong>decryptable</strong> (unlike passwords). AES-256-GCM provides authenticated encryption &mdash; any tampering is detected. Key is derived from <code>PAYLOAD_SECRET</code> via HKDF-SHA256, meaning a single env var secures both Payload sessions and TOTP. Backward-compatible with legacy plaintext for migration.</div>
+      <div class="decision-tag">Security</div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-q">Why Cloudflare R2 over AWS S3?</div>
+      <div class="decision-a"><strong>Zero egress fees.</strong> R2 is S3-compatible (uses Payload's S3 adapter directly) but doesn't charge for data transfer. For a media-heavy app with avatars, chat attachments, inventory photos, and guide images across many crews, egress costs would add up fast on S3.</div>
+      <div class="decision-tag">Cost Optimization</div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-q">Why AbortController over cancelled flags?</div>
+      <div class="decision-a">AbortController is the <strong>browser-native</strong> way to cancel fetch requests. Unlike <code>let cancelled = false</code> flags (which only prevent state updates), AbortController actually <strong>terminates the HTTP request</strong>, freeing network resources. Stored in <code>useRef</code> to survive re-renders.</div>
+      <div class="decision-tag">Performance</div>
+    </div>
+    <div class="decision-card">
+      <div class="decision-q">Why fire-and-forget in afterChange hooks?</div>
+      <div class="decision-a">Side effects (emails, notifications, cache revalidation) should <strong>never block the response</strong>. An inner async function with <code>.catch()</code> runs the work in the background while immediately returning the document. If a notification fails, the user still gets their response. Failed side effects are logged, not thrown.</div>
+      <div class="decision-tag">Resilience</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ PATTERNS ═══════════ -->
+  <div class="section-title accent-teal" id="patterns">
+    <div class="icon">&#x1F4CB;</div>
+    <h2>Patterns &amp; Conventions</h2>
+    <span class="subtitle">Rules that keep the codebase consistent</span>
+  </div>
+
+  <div class="pattern-list">
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F50D;</div>
+      <div class="pattern-text">
+        <h4>select + depth on every query</h4>
+        <p>Always specify <code>select: { field: true }</code> and minimize <code>depth</code> (0=IDs, 1=direct). Never empty <code>select: {}</code> &mdash; it fetches everything.</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F3E0;</div>
+      <div class="pattern-text">
+        <h4>Crew isolation in all queries</h4>
+        <p>Every data query includes <code>{ crew: { equals: crewId } }</code> to enforce multi-tenant data boundaries.</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x26A0;</div>
+      <div class="pattern-text">
+        <h4>Every catch: log + toast</h4>
+        <p><code>console.error</code> + <code>toast.error</code> in every catch block. Never silently swallow errors. Server-side: <code>payload.logger.error()</code>.</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F504;</div>
+      <div class="pattern-text">
+        <h4>Context guards for hook loops</h4>
+        <p><code>req.context?.skipFoo</code> breaks bidirectional hook cycles (e.g., Users &#x2194; CrewMemberships sync).</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F6AB;</div>
+      <div class="pattern-text">
+        <h4>Unconditional user fields</h4>
+        <p>In hooks: <code>data.user = req.user.id</code> (never conditional). Prevents impersonation by overwriting any user-submitted value.</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F4B0;</div>
+      <div class="pattern-text">
+        <h4>Amounts in cents</h4>
+        <p><code>order.amount</code> stored as integers (cents). Display with <code>(amount / 100).toFixed(2)</code>. Avoids floating-point errors.</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F3F7;</div>
+      <div class="pattern-text">
+        <h4>extractId() for relationships</h4>
+        <p>Relationship fields can be IDs or populated objects. <code>extractId()</code> normalizes to string ID regardless of depth.</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F4F1;</div>
+      <div class="pattern-text">
+        <h4>iOS-safe input sizing</h4>
+        <p><code>text-base md:text-sm</code> (16px on mobile) prevents iOS auto-zoom on input focus. <code>maximumScale: 1</code> in viewport.</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x23F1;</div>
+      <div class="pattern-text">
+        <h4>Rate limit all routes</h4>
+        <p><code>rateLimit(key, limit, windowMs)</code> on every API endpoint &mdash; both GETs and mutations. Prefer <code>x-real-ip</code> over forwarded.</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F680;</div>
+      <div class="pattern-text">
+        <h4>Parallelize with Promise.all</h4>
+        <p>Independent queries run in parallel. Hook side effects are fire-and-forget. <code>useMemo</code> for computed values in components.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ CHAT ═══════════ -->
+  <div class="section-title accent-orange" id="chat">
+    <div class="icon">&#x1F4AC;</div>
+    <h2>PeachChat Architecture</h2>
+    <span class="subtitle">Real-time crew communication system</span>
+  </div>
+
+  <div class="card-grid cols-2">
+    <div class="card accent-orange">
+      <div class="card-header">
+        <div class="card-icon">&#x1F5C2;</div>
+        <h3>4 Collections</h3>
+      </div>
+      <ul>
+        <li><strong>ChatChannels</strong> &mdash; Global + crew-scoped channels, restricted access</li>
+        <li><strong>ChatMessages</strong> &mdash; Threaded messages, reactions, edit history, pins</li>
+        <li><strong>ChatMedia</strong> &mdash; File attachments up to 20 MB per message</li>
+        <li><strong>ChatReadState</strong> &mdash; Per-user, per-channel read markers</li>
+      </ul>
+    </div>
+    <div class="card accent-orange">
+      <div class="card-header">
+        <div class="card-icon">&#x1F4F1;</div>
+        <h3>Mobile Gestures</h3>
+      </div>
+      <ul>
+        <li><strong>Long press</strong> &rarr; Action sheet (reply, edit, pin, delete)</li>
+        <li><strong>Swipe right</strong> &rarr; Quote reply with message context</li>
+        <li><strong>15-min edit window</strong> &mdash; Full edit history preserved</li>
+        <li><strong>@mentions</strong> &mdash; Autocomplete with crew members</li>
+      </ul>
+    </div>
+    <div class="card accent-orange" style="grid-column: 1 / -1;">
+      <div class="card-header">
+        <div class="card-icon">&#x26A1;</div>
+        <h3>Message Flow</h3>
+      </div>
+      <div class="flow-section">
+        <div class="flow-row">
+          <span class="flow-label" style="color:var(--orange)">SEND</span>
+          <div class="flow-step" style="border-color:rgba(249,115,22,0.3)">&#x270D; Compose</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(249,115,22,0.3)">&#x1F6E1; CSRF Check</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(249,115,22,0.3)">&#x1F9F9; Sanitize</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(249,115,22,0.3)">&#x1F4BE; Save to DB</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(249,115,22,0.3)">&#x1F514; Notify</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label" style="color:var(--sky)">RECEIVE</span>
+          <div class="flow-step" style="border-color:rgba(14,165,233,0.3)">&#x23F3; Poll /api/chat/poll</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(14,165,233,0.3)">&#x1F4E5; New Messages</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(14,165,233,0.3)">&#x1F517; Link Previews</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(14,165,233,0.3)">&#x1F4F1; Render Feed</div>
+        </div>
+        <div class="flow-row">
+          <span class="flow-label" style="color:var(--slate-400)">OFFLINE</span>
+          <div class="flow-step" style="border-color:rgba(148,163,184,0.3)">&#x274C; Fetch Fails</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(148,163,184,0.3)">&#x1F4E6; IndexedDB Queue</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(148,163,184,0.3)">&#x1F310; Online Event</div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-step" style="border-color:rgba(148,163,184,0.3)">&#x1F504; Replay Mutations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ PWA ═══════════ -->
+  <div class="section-title accent-blue" id="pwa">
+    <div class="icon">&#x1F4F1;</div>
+    <h2>PWA &amp; Offline Architecture</h2>
+    <span class="subtitle">Progressive Web App with service worker caching</span>
+  </div>
+
+  <div class="card-grid cols-3">
+    <div class="card accent-blue">
+      <div class="card-header">
+        <div class="card-icon">&#x2699;</div>
+        <h3>Service Worker</h3>
+      </div>
+      <ul>
+        <li>Built with <strong>Serwist</strong></li>
+        <li>Precaches app shell</li>
+        <li>Route-specific strategies</li>
+        <li>Custom cache keys</li>
+      </ul>
+    </div>
+    <div class="card accent-blue">
+      <div class="card-header">
+        <div class="card-icon">&#x1F4E6;</div>
+        <h3>Caching Strategies</h3>
+      </div>
+      <ul>
+        <li><strong>Schedule API</strong> &mdash; StaleWhileRevalidate (7d)</li>
+        <li><strong>Recipes API</strong> &mdash; StaleWhileRevalidate (7d)</li>
+        <li><strong>Inventory API</strong> &mdash; NetworkFirst (7d)</li>
+        <li><strong>Chat channels</strong> &mdash; StaleWhileRevalidate (1d)</li>
+      </ul>
+    </div>
+    <div class="card accent-blue">
+      <div class="card-header">
+        <div class="card-icon">&#x1F4F4;</div>
+        <h3>Offline Queue</h3>
+      </div>
+      <ul>
+        <li>IndexedDB <code>ocfcrews-offline</code></li>
+        <li>100-mutation max capacity</li>
+        <li>Exponential backoff retry</li>
+        <li>States: pending &rarr; syncing &rarr; done</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ MULTI-CREW ═══════════ -->
+  <div class="section-title accent-emerald" id="multi-crew">
+    <div class="icon">&#x1F465;</div>
+    <h2>Multi-Crew Data Model</h2>
+    <span class="subtitle">How crew isolation and membership works</span>
+  </div>
+
+  <div class="arch-diagram">
+    <div class="arch-layers" style="min-width: 700px;">
+      <div class="arch-layer">
+        <div class="arch-label" style="background:rgba(139,92,246,0.15);color:var(--purple)">SOURCE OF TRUTH</div>
+        <div class="arch-content">
+          <div class="arch-box" style="background:rgba(139,92,246,0.06);color:var(--purple);border:1px solid rgba(139,92,246,0.15);flex:2">
+            <strong>CrewMemberships</strong>
+            <small>user + crew + role + status</small>
+            <small>One record per user-crew pair</small>
+          </div>
+        </div>
+      </div>
+      <div class="arch-arrow" style="min-width:700px"><div class="arch-arrow-line">syncs via hooks</div></div>
+      <div class="arch-layer">
+        <div class="arch-label" style="background:rgba(16,185,129,0.15);color:var(--emerald-400)">COMPUTED</div>
+        <div class="arch-content">
+          <div class="arch-box" style="background:rgba(16,185,129,0.06);color:var(--emerald-400);border:1px solid rgba(16,185,129,0.15)">
+            <strong>user.crew</strong>
+            <small>Active crew pointer</small>
+          </div>
+          <div class="arch-box" style="background:rgba(16,185,129,0.06);color:var(--emerald-400);border:1px solid rgba(16,185,129,0.15)">
+            <strong>user.crewRole</strong>
+            <small>Computed from membership</small>
+          </div>
+          <div class="arch-box" style="background:rgba(16,185,129,0.06);color:var(--emerald-400);border:1px solid rgba(16,185,129,0.15)">
+            <strong>crew.coordinators[]</strong>
+            <small>Synced coordinator list</small>
+          </div>
+        </div>
+      </div>
+      <div class="arch-arrow" style="min-width:700px"><div class="arch-arrow-line">enforced in queries</div></div>
+      <div class="arch-layer">
+        <div class="arch-label" style="background:rgba(245,158,11,0.15);color:var(--amber)">ISOLATION</div>
+        <div class="arch-content">
+          <div class="arch-box" style="background:rgba(245,158,11,0.06);color:var(--amber);border:1px solid rgba(245,158,11,0.15);flex:2">
+            <strong>{ crew: { equals: crewId } }</strong>
+            <small>Applied to every data query across all collections</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-list" style="margin-top:16px">
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F6A8;</div>
+      <div class="pattern-text">
+        <h4>"Unassigned" crew</h4>
+        <p>Slug <code>'unassigned'</code>. New users auto-assigned. Hidden in most UI via <code>isOnRealCrew</code> / <code>isUnassignedCrew</code> guards.</p>
+      </div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon">&#x1F504;</div>
+      <div class="pattern-text">
+        <h4>Bidirectional sync</h4>
+        <p>CrewMemberships &#x2194; Users hooks use <code>req.context?.skipSync</code> to prevent infinite loops.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ HOOK LIFECYCLE ═══════════ -->
+  <div class="section-title accent-emerald" id="hooks">
+    <div class="icon">&#x1F504;</div>
+    <h2>Payload Hook Lifecycle</h2>
+    <span class="subtitle">How data flows through the hook pipeline</span>
+  </div>
+
+  <div class="arch-diagram">
+    <div class="arch-layers" style="min-width:800px">
+      <div class="arch-layer">
+        <div class="arch-label" style="background:rgba(14,165,233,0.15);color:var(--sky);width:130px">1. REQUEST</div>
+        <div class="arch-content">
+          <div class="arch-box" style="background:rgba(14,165,233,0.06);color:var(--sky);border:1px solid rgba(14,165,233,0.15)">Incoming API call<small>create / update / delete</small></div>
+        </div>
+      </div>
+      <div class="arch-arrow" style="min-width:800px"><div class="arch-arrow-line"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--slate-600)"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></div></div>
+      <div class="arch-layer">
+        <div class="arch-label" style="background:rgba(245,158,11,0.15);color:var(--amber);width:130px">2. BEFORE VALIDATE</div>
+        <div class="arch-content">
+          <div class="arch-box" style="background:rgba(245,158,11,0.06);color:var(--amber);border:1px solid rgba(245,158,11,0.15)">Auto-set defaults<small>slugs, required fields</small></div>
+          <div class="arch-box" style="background:rgba(245,158,11,0.06);color:var(--amber);border:1px solid rgba(245,158,11,0.15)">Force user field<small>data.user = req.user.id</small></div>
+        </div>
+      </div>
+      <div class="arch-arrow" style="min-width:800px"><div class="arch-arrow-line"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--slate-600)"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></div></div>
+      <div class="arch-layer">
+        <div class="arch-label" style="background:rgba(139,92,246,0.15);color:var(--purple);width:130px">3. VALIDATE</div>
+        <div class="arch-content">
+          <div class="arch-box" style="background:rgba(139,92,246,0.06);color:var(--purple);border:1px solid rgba(139,92,246,0.15)">Schema validation<small>required, min/max, unique</small></div>
+        </div>
+      </div>
+      <div class="arch-arrow" style="min-width:800px"><div class="arch-arrow-line"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--slate-600)"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></div></div>
+      <div class="arch-layer">
+        <div class="arch-label" style="background:rgba(16,185,129,0.15);color:var(--emerald-400);width:130px">4. BEFORE CHANGE</div>
+        <div class="arch-content">
+          <div class="arch-box" style="background:rgba(16,185,129,0.06);color:var(--emerald-400);border:1px solid rgba(16,185,129,0.15)">Fetch fresh data<small>Race condition guard</small></div>
+          <div class="arch-box" style="background:rgba(16,185,129,0.06);color:var(--emerald-400);border:1px solid rgba(16,185,129,0.15)">Business rules<small>Validate transitions</small></div>
+        </div>
+      </div>
+      <div class="arch-arrow" style="min-width:800px"><div class="arch-arrow-line"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--slate-600)"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></div></div>
+      <div class="arch-layer">
+        <div class="arch-label" style="background:rgba(239,68,68,0.15);color:var(--red);width:130px">5. DATABASE</div>
+        <div class="arch-content">
+          <div class="arch-box" style="background:rgba(239,68,68,0.06);color:var(--red);border:1px solid rgba(239,68,68,0.15)">MongoDB write<small>Atomic operation</small></div>
+        </div>
+      </div>
+      <div class="arch-arrow" style="min-width:800px"><div class="arch-arrow-line"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--slate-600)"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg></div></div>
+      <div class="arch-layer">
+        <div class="arch-label" style="background:rgba(236,72,153,0.15);color:var(--pink);width:130px">6. AFTER CHANGE</div>
+        <div class="arch-content">
+          <div class="arch-box" style="background:rgba(236,72,153,0.06);color:var(--pink);border:1px solid rgba(236,72,153,0.15)">Fire-and-forget<small>inner async + .catch()</small></div>
+          <div class="arch-box" style="background:rgba(236,72,153,0.06);color:var(--pink);border:1px solid rgba(236,72,153,0.15)">Notifications<small>email, push, SMS</small></div>
+          <div class="arch-box" style="background:rgba(236,72,153,0.06);color:var(--pink);border:1px solid rgba(236,72,153,0.15)">Revalidate cache<small>Next.js revalidateTag</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ CRON & INTEGRATIONS ═══════════ -->
+  <div class="section-title accent-pink" id="cron">
+    <div class="icon">&#x23F0;</div>
+    <h2>Scheduled Jobs &amp; Integrations</h2>
+  </div>
+
+  <div class="card-grid cols-2">
+    <div class="card accent-pink">
+      <div class="card-header">
+        <div class="card-icon">&#x23F0;</div>
+        <h3>Cron Jobs (Vercel)</h3>
+      </div>
+      <ul>
+        <li><strong>Every 15 min</strong> &mdash; Process scheduled email queue</li>
+        <li><strong>Every 12 hrs</strong> &mdash; Aggregate page views &rarr; daily rollups</li>
+        <li><strong>Daily</strong> &mdash; Auto-schedule shift assignments</li>
+        <li><strong>Weekly</strong> &mdash; Cleanup unverified accounts</li>
+        <li><strong>Every 5 min</strong> &mdash; Keep-alive ping</li>
+      </ul>
+    </div>
+    <div class="card accent-amber">
+      <div class="card-header">
+        <div class="card-icon">&#x1F517;</div>
+        <h3>External Integrations</h3>
+      </div>
+      <ul>
+        <li><strong>Stripe Connect</strong> &mdash; Multi-crew payouts, refunds, onboarding</li>
+        <li><strong>Resend</strong> &mdash; Transactional + campaign emails, bounce webhook</li>
+        <li><strong>Twilio</strong> &mdash; SMS with 5/phone/hour rate limit</li>
+        <li><strong>Cloudflare R2</strong> &mdash; S3-compatible object storage</li>
+        <li><strong>Web Push</strong> &mdash; VAPID-based push notifications</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ NAV ═══════════ -->
+  <div class="section-title accent-purple" id="nav">
+    <div class="icon">&#x1F9ED;</div>
+    <h2>Navigation &amp; Color System</h2>
+  </div>
+
+  <div class="nav-map">
+    <div class="nav-tab" style="background:rgba(139,92,246,0.12);color:var(--purple);border:1px solid rgba(139,92,246,0.2)">
+      &#x2630; More
+      <small>Menu drawer</small>
+    </div>
+    <div class="nav-tab" style="background:rgba(139,92,246,0.12);color:var(--purple);border:1px solid rgba(139,92,246,0.2)">
+      &#x1F3E0; Dashboard
+      <small>Coord: purple</small>
+    </div>
+    <div class="nav-tab" style="background:rgba(14,165,233,0.12);color:var(--sky);border:1px solid rgba(14,165,233,0.2)">
+      &#x1F4C5; Schedule
+      <small>Sky blue</small>
+    </div>
+    <div class="nav-tab" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.2)">
+      &#x1F4AC; Chat
+      <small>Orange</small>
+    </div>
+    <div class="nav-tab" style="background:rgba(16,185,129,0.12);color:var(--emerald-400);border:1px solid rgba(16,185,129,0.2)">
+      &#x1F464; Account
+      <small>Emerald</small>
+    </div>
+  </div>
+
+  <div class="pattern-list">
+    <div class="pattern">
+      <div class="pattern-icon" style="color:var(--sky)">&#x1F4C5;</div>
+      <div class="pattern-text"><h4 style="color:var(--sky)">Schedule = Sky</h4><p>Shifts, availability, templates</p></div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon" style="color:var(--orange)">&#x1F4AC;</div>
+      <div class="pattern-text"><h4 style="color:var(--orange)">Chat = Orange</h4><p>PeachChat messaging system</p></div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon" style="color:var(--purple)">&#x1F4CA;</div>
+      <div class="pattern-text"><h4 style="color:var(--purple)">Dashboard = Purple</h4><p>Coordinator analytics &amp; overview</p></div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon" style="color:var(--amber)">&#x1F4E6;</div>
+      <div class="pattern-text"><h4 style="color:var(--amber)">Inventory = Amber</h4><p>Stock management &amp; barcode scanning</p></div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon" style="color:var(--pink)">&#x1F373;</div>
+      <div class="pattern-text"><h4 style="color:var(--pink)">Recipes = Pink</h4><p>Recipe browser &amp; favorites</p></div>
+    </div>
+    <div class="pattern">
+      <div class="pattern-icon" style="color:var(--teal)">&#x1F4DA;</div>
+      <div class="pattern-text"><h4 style="color:var(--teal)">Guides = Teal</h4><p>Crew knowledge base &amp; docs</p></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════ DIRECTORY MAP ═══════════ -->
+  <div class="section-title accent-sky" id="structure">
+    <div class="icon">&#x1F4C2;</div>
+    <h2>Project Structure</h2>
+    <span class="subtitle">High-level directory organization</span>
+  </div>
+
+  <div class="code-block">
+<span class="code-comment">// src/ &mdash; Application source</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">access/</span>         <span class="code-comment">// 12+ row-level access control functions</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">app/(app)/</span>      <span class="code-comment">// Main app routes (authenticated)</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="code-type">api/</span>         <span class="code-comment">// 40+ API route handlers</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="code-type">chat/</span>        <span class="code-comment">// Chat UI pages</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="code-type">crew/</span>        <span class="code-comment">// Crew management (13 nested routes)</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="code-type">schedule/</span>    <span class="code-comment">// Shift scheduling</span>
+&#x2502;   &#x2514;&#x2500;&#x2500; <span class="code-type">...</span>          <span class="code-comment">// 28+ more page routes</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">blocks/</span>         <span class="code-comment">// 13 page builder blocks</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">collections/</span>    <span class="code-comment">// 52 Payload CMS collections</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">components/</span>     <span class="code-comment">// 72 component directories</span>
+&#x2502;   &#x2514;&#x2500;&#x2500; <span class="code-type">Chat/</span>        <span class="code-comment">// 24 chat-specific components</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">constants/</span>      <span class="code-comment">// 8 shared constant files</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">emails/</span>         <span class="code-comment">// 10+ React Email templates</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">globals/</span>        <span class="code-comment">// 4 Payload globals (Header, Footer, Settings, PassSettings)</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">hooks/</span>          <span class="code-comment">// 15+ custom React hooks</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">providers/</span>      <span class="code-comment">// 7 React context providers</span>
+&#x251C;&#x2500;&#x2500; <span class="code-func">utilities/</span>      <span class="code-comment">// 47 utility functions</span>
+&#x2502;   &#x2514;&#x2500;&#x2500; <span class="code-type">offline/</span>     <span class="code-comment">// IndexedDB + replay logic</span>
+&#x251C;&#x2500;&#x2500; <span class="code-string">middleware.ts</span>   <span class="code-comment">// Auth guard (cookie check)</span>
+&#x251C;&#x2500;&#x2500; <span class="code-string">sw.ts</span>           <span class="code-comment">// Service worker (Serwist)</span>
+&#x2514;&#x2500;&#x2500; <span class="code-string">payload.config.ts</span> <span class="code-comment">// CMS configuration</span>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>OCF Crews Architecture Infographic &middot; Next.js 15 + Payload CMS 3 + MongoDB</p>
+    <p style="margin-top:8px;font-size:12px;color:var(--slate-700)">52 collections &middot; 40+ API routes &middot; 72 components</p>
+  </div>
+
+</div>
+
+</body>
+</html>
